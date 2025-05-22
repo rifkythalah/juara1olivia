@@ -67,7 +67,7 @@
                                 <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-900">{{ $laporan->created_at->format('d/m/Y') }}</td>
                                 <td class="px-3 sm:px-4 py-4">
                                     @php
-                                        $lastTracking = $laporan->tracking->last();
+                                        $lastTracking = $laporan->tracking->sortByDesc('created_at')->first();
                                     @endphp
                                     @if($laporan->status == 'Menunggu' && $laporan->escalated_to_pusat)
                                         <span>Belum Respon</span>
@@ -77,19 +77,9 @@
                                 </td>
                                 <td class="px-3 sm:px-4 py-4">
                                     @if($laporan->status == 'Menunggu' && $laporan->escalated_to_pusat)
-                                        <a href="{{ route('pemerintahpusat.laporan.belumdirespon.detail', $laporan->id) }}" class="text-yellow-500 hover:text-yellow-600" title="Lihat Detail">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                        </a>
+                                        <a href="{{ route('pemerintahpusat.laporan.belumdirespon.detail', $laporan->id) }}">Detail</a>
                                     @elseif($lastTracking && $lastTracking->status == 'Tidak Terselesaikan')
-                                        <a href="{{ route('pemerintahpusat.laporan.belumterselesaikan.detail', $laporan->id) }}" class="text-yellow-500 hover:text-yellow-600" title="Lihat Detail">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                        </a>
+                                        <a href="{{ route('pemerintahpusat.laporan.belumterselesaikan.detail', $laporan->id) }}">Detail</a>
                                     @endif
                                 </td>
                             </tr>

@@ -14,6 +14,7 @@ use App\Models\Admin;
 use App\Models\UlasanLaporan;
 use App\Models\Notifikasi;
 use App\Models\PemerintahPusatDinas;
+use App\Models\PesanPusatKeDinas;
 
 class LaporanPengaduanController extends Controller
 {
@@ -1021,6 +1022,7 @@ class LaporanPengaduanController extends Controller
             ->where('status', 'Menunggu')
             ->get();
 
+        // Ambil hanya laporan yang tracking terakhirnya "Tidak Terselesaikan"
         $trackingIds = \App\Models\TrackingLaporan::where('escalated_to_pusat', 1)
             ->where('status', 'Tidak Terselesaikan')
             ->pluck('pengaduan_id');
@@ -1033,7 +1035,17 @@ class LaporanPengaduanController extends Controller
 
     public function detailBelumResponPusat($id)
     {
-        $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
+        $laporan = LaporanPengaduan::findOrFail($id);
+
+        // Cek apakah sudah ada pesan dari pusat ke dinas untuk laporan ini
+        $pesan = Notifikasi::where('pengaduan_id', $id)
+            ->where('jenis_notifikasi', 'PesanPusat')
+            ->first();
+        if ($pesan) {
+            // Sudah pernah kirim pesan, redirect ke halaman pesan
+            return redirect()->route('pemerintahpusat.laporan.pesanBelumDirespon', $id);
+        }
+        // Belum pernah kirim pesan, tampilkan form kirim pesan
         return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumdirespon.belumdirespon', compact('laporan'));
     }
 
@@ -1076,13 +1088,13 @@ class LaporanPengaduanController extends Controller
     {
         $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
         // Ambil notifikasi terbaru dari pusat ke dinas untuk laporan ini
-        $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
+        $pesan = Notifikasi::where('pengaduan_id', $id)
             ->where('jenis_notifikasi', 'PesanPusat')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $isi_pesan = $notifikasi->isi_notifikasi ?? '';
-        $waktu_kirim = $notifikasi->created_at ?? null;
+        $isi_pesan = $pesan->isi_notifikasi ?? '';
+        $waktu_kirim = $pesan->created_at ?? null;
 
         return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumdirespon.PesanBelumDirespon', compact('laporan', 'isi_pesan', 'waktu_kirim'));
     }
@@ -1091,13 +1103,13 @@ class LaporanPengaduanController extends Controller
     {
         $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
         // Ambil notifikasi terbaru dari pusat ke dinas untuk laporan ini
-        $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
+        $pesan = Notifikasi::where('pengaduan_id', $id)
             ->where('jenis_notifikasi', 'PesanPusat')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $isi_pesan = $notifikasi->isi_notifikasi ?? '';
-        $waktu_kirim = $notifikasi->created_at ?? null;
+        $isi_pesan = $pesan->isi_notifikasi ?? '';
+        $waktu_kirim = $pesan->created_at ?? null;
 
         return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.PesanBelumDiresponDinas', compact('laporan', 'isi_pesan', 'waktu_kirim'));
     }
@@ -1105,13 +1117,13 @@ class LaporanPengaduanController extends Controller
     public function pesanTidakTerselesaikanDinas($id)
     {
         $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
-        $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
+        $pesan = Notifikasi::where('pengaduan_id', $id)
             ->where('jenis_notifikasi', 'PesanPusat')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $isi_pesan = $notifikasi->isi_notifikasi ?? '';
-        $waktu_kirim = $notifikasi->created_at ?? null;
+        $isi_pesan = $pesan->isi_notifikasi ?? '';
+        $waktu_kirim = $pesan->created_at ?? null;
 
         return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.PesanTidakTerselesaikan', compact('laporan', 'isi_pesan', 'waktu_kirim'));
     }
@@ -1169,15 +1181,14 @@ class LaporanPengaduanController extends Controller
 
     public function pesanBelumTerselesaikanPusat($id)
     {
-        $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
-        // Ambil notifikasi terbaru dari pusat ke dinas untuk laporan ini
-        $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
+        $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
+        $pesan = Notifikasi::where('pengaduan_id', $id)
             ->where('jenis_notifikasi', 'PesanPusat')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $isi_pesan = $notifikasi->isi_notifikasi ?? '';
-        $waktu_kirim = $notifikasi->created_at ?? null;
+        $isi_pesan = $pesan->isi_notifikasi ?? '';
+        $waktu_kirim = $pesan->created_at ?? null;
 
         return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.PesanBelumTerselesaikan', compact('laporan', 'isi_pesan', 'waktu_kirim'));
     }
@@ -1210,6 +1221,16 @@ class LaporanPengaduanController extends Controller
     {
         $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
         $penyelesaian = $laporan->penyelesaian;
+
+        // Cek apakah sudah ada pesan dari pusat ke dinas untuk laporan ini
+        $pesan = Notifikasi::where('pengaduan_id', $id)
+            ->where('jenis_notifikasi', 'PesanPusat')
+            ->first();
+        if ($pesan) {
+            // Sudah pernah kirim pesan, redirect ke halaman pesan
+            return redirect()->route('pemerintahpusat.laporan.pesanBelumTerselesaikan', $id);
+        }
+        // Belum pernah kirim pesan, tampilkan form kirim pesan
         return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan', compact('laporan', 'penyelesaian'));
     }
 }
