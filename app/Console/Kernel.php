@@ -22,6 +22,9 @@ class Kernel extends ConsoleKernel
             app(\App\Http\Controllers\LaporanPengaduanController::class)->escalateUnrespondedLaporan();
         })->everyMinute();
         $schedule->command('app:escalate-laporan-menunggu')->everyMinute();
+        $schedule->call(function () {
+            app(\App\Http\Controllers\LaporanPengaduanController::class)->escalateUnfinishedLaporan();
+        })->everyMinute();
     }
 
     /**

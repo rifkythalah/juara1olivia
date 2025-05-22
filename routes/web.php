@@ -307,6 +307,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/pemerintahpusat/laporan/belum-terselesaikan', function () {
             return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan');
         })->name('pemerintahpusat.laporan.belum-terselesaikan');
+
+        Route::get('/pemerintahpusat/notifikasi', [LaporanPengaduanController::class, 'notifikasiPusat'])->name('pemerintahpusat.notifikasi');
+        Route::get('/pemerintahpusat/notifikasi/{id}/detail', [LaporanPengaduanController::class, 'detailNotifikasiPusatDitolak'])->name('pemerintahpusat.notifikasi.ditolak');
     });
 
     // Untuk pusat melihat laporan yang belum direspon dinas
@@ -362,3 +365,18 @@ Route::get('/dinas/laporan/pesan-belum-direspon/{id}', [LaporanPengaduanControll
 Route::get('/escalate-unfinished', [LaporanPengaduanController::class, 'escalateUnfinishedLaporan']);
 
 Route::get('/escalate-menunggu', [LaporanPengaduanController::class, 'escalateMenungguLaporan']);
+
+
+// Route untuk laporan belum terselesaikan
+Route::get('/pemerintahpusat/laporan/belumterselesaikan/{id}', [PusatController::class, 'laporanBelumTerselesaikan'])
+    ->name('pemerintahpusat.laporan.belumterselesaikan.detail');
+
+Route::post('/pemerintahpusat/laporan/belum-terselesaikan/{id}/kirim-pesan', [LaporanPengaduanController::class, 'kirimPesanBelumTerselesaikan'])
+    ->name('pemerintahpusat.laporan.kirimPesanBelumTerselesaikan');
+
+// Route untuk menampilkan detail pesan
+Route::get('/pemerintahpusat/laporan/belum-terselesaikan/pesan/{id}', [LaporanPengaduanController::class, 'pesanBelumTerselesaikanPusat'])
+    ->name('pemerintahpusat.laporan.pesanBelumTerselesaikan');
+
+// Halaman detail pesan pusat (untuk dinas)
+Route::get('/dinas/laporan/pesan-tidak-terselesaikan/{id}', [LaporanPengaduanController::class, 'pesanTidakTerselesaikanDinas'])->name('dinas.laporan.pesanTidakTerselesaikan');

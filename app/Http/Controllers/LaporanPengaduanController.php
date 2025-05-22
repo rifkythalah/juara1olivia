@@ -13,6 +13,7 @@ use App\Models\PenyelesaianLaporan;
 use App\Models\Admin;
 use App\Models\UlasanLaporan;
 use App\Models\Notifikasi;
+use App\Models\PemerintahPusatDinas;
 
 class LaporanPengaduanController extends Controller
 {
@@ -176,7 +177,7 @@ class LaporanPengaduanController extends Controller
 
     public function tracking()
     {
-        return $this->hasMany(TrackingLaporan::class, 'pengaduan_id');
+        return $this->hasMany(TrackingLaporan::class);
     }
 
     public function laporanUtamaDinas(Request $request)
@@ -700,7 +701,9 @@ class LaporanPengaduanController extends Controller
         $laporan->save();
         LaporanPengaduan::where('related_pengaduan_id', $laporan->id)->update(['status' => 'Ditolak']);
 
-        // Tracking
+        // Tambahkan baris ini sebelum TrackingLaporan::create
+        $admin = \App\Models\Admin::first();
+
         TrackingLaporan::create([
             'pengaduan_id' => $laporan->id,
             'status' => 'Di Proses',
@@ -770,6 +773,24 @@ class LaporanPengaduanController extends Controller
                 'isi_notifikasi' => $isi,
                 'status_notifikasi' => 'Terkirim',
                 'jenis_notifikasi' => 'Penolakan',
+                'created_at' => $now,
+            ]);
+        }
+
+        // Ambil user_id pusat (asumsi hanya 1 pusat)
+        $pusat = \App\Models\PemerintahPusatDinas::first(); // Ganti dengan model pusat yang benar
+        $userPusat = $pusat->user_id ?? null;
+
+        // Notifikasi untuk pusat
+        if ($userPusat) {
+            \App\Models\Notifikasi::create([
+                'user_id' => $userPusat,
+                'pengaduan_id' => $laporan->id,
+                'judul_notifikasi' => $judul,
+                'isi_notifikasi' => $isi,
+                'status_notifikasi' => 'Terkirim',
+                'jenis_notifikasi' => 'Penolakan',
+                'role_tujuan' => 'pemerintahpusat',
                 'created_at' => $now,
             ]);
         }
@@ -1052,6 +1073,20 @@ class LaporanPengaduanController extends Controller
         return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.PesanBelumDiresponDinas', compact('laporan', 'isi_pesan', 'waktu_kirim'));
     }
 
+    public function pesanTidakTerselesaikanDinas($id)
+    {
+        $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
+        $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
+            ->where('jenis_notifikasi', 'PesanPusat')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $isi_pesan = $notifikasi->isi_notifikasi ?? '';
+        $waktu_kirim = $notifikasi->created_at ?? null;
+
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.PesanTidakTerselesaikan', compact('laporan', 'isi_pesan', 'waktu_kirim'));
+    }
+
     public function escalateMenungguLaporan()
     {
         $laporans = \App\Models\LaporanPengaduan::where('status', 'Menunggu')
@@ -1066,5 +1101,79 @@ class LaporanPengaduanController extends Controller
         }
 
         return 'Eskalasi selesai';
+    }
+
+    public function kirimPesanBelumTerselesaikan(Request $request, $id)
+    {
+        $request->validate([
+            'isi_pesan' => 'required|string|max:1000'
+        ]);
+        $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
+
+        // Ambil user dinas tujuan
+        $dinas = $laporan->dinas;
+        $userDinas = $dinas->user_id ?? null;
+
+        // Data notifikasi
+        $judul = 'Pesan dari Pemerintah Pusat';
+        $isi = $request->isi_pesan;
+        $now = now();
+
+        // Simpan notifikasi ke dinas
+        if ($userDinas) {
+            \App\Models\Notifikasi::create([
+                'user_id' => $userDinas,
+                'pengaduan_id' => $laporan->id,
+                'judul_notifikasi' => $judul,
+                'isi_notifikasi' => $isi,
+                'status_notifikasi' => 'Terkirim',
+                'jenis_notifikasi' => 'PesanPusat',
+                'role_tujuan' => 'dinas',
+                'created_at' => $now,
+            ]);
+        }
+
+        // Redirect ke halaman pesan pusat (untuk pusat)
+        return redirect()->route('pemerintahpusat.laporan.pesanBelumTerselesaikan', $laporan->id)
+            ->with('success', 'Pesan berhasil dikirim ke dinas.');
+    }
+
+    public function pesanBelumTerselesaikanPusat($id)
+    {
+        $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
+        // Ambil notifikasi terbaru dari pusat ke dinas untuk laporan ini
+        $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
+            ->where('jenis_notifikasi', 'PesanPusat')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $isi_pesan = $notifikasi->isi_notifikasi ?? '';
+        $waktu_kirim = $notifikasi->created_at ?? null;
+
+        return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.PesanBelumTerselesaikan', compact('laporan', 'isi_pesan', 'waktu_kirim'));
+    }
+
+    public function notifikasiPusat()
+    {
+        $user = auth()->user();
+        $notifikasis = \App\Models\Notifikasi::where(function($q) use ($user) {
+                $q->where('role_tujuan', 'pemerintahpusat')
+                  ->orWhere('user_id', $user->id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $unreadNotifCount = $notifikasis->where('status_notifikasi', 'Terkirim')->count();
+
+        return view('Dashboardstlhlogin.pemerintahpusat.notifikasi.notifikasi', compact('notifikasis', 'unreadNotifCount'));
+    }
+
+    public function detailNotifikasiPusatDitolak($id)
+    {
+        $notifikasi = \App\Models\Notifikasi::findOrFail($id);
+        $laporan = $notifikasi->laporan;
+        $alasan_penolakan = $laporan->penyelesaian->alasan_penolakan ?? '';
+        $waktu_tolak = $laporan->penyelesaian->waktu_tolak ?? $laporan->updated_at;
+        return view('Dashboardstlhlogin.pemerintahpusat.notifikasi.notifikasiditolak', compact('laporan', 'alasan_penolakan', 'waktu_tolak', 'notifikasi'));
     }
 }

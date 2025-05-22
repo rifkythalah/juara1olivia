@@ -16,12 +16,25 @@
                  {{ $notif->status_notifikasi == 'Terkirim' ? 'bg-kuning' : 'bg-[#FFD881]' }}">
                 <div>
                     @if($notif->jenis_notifikasi == 'PesanPusat')
-                        <a href="{{ route('dinas.laporan.pesanBelumDirespon', $notif->pengaduan_id) }}"
-                           onclick="markAsRead({{ $notif->notifikasi_id }})">
-                            <h3 class="font-semibold text-hitam">{{ $notif->judul_notifikasi }}</h3>
-                            <p class="text-sm text-hitam/70 mt-1">{{ $notif->isi_notifikasi }}</p>
-                            <p class="text-xs text-hitam/50 mt-1">{{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}</p>
-                        </a>
+                        @php
+                            $laporan = \App\Models\LaporanPengaduan::with('tracking')->find($notif->pengaduan_id);
+                            $lastTracking = $laporan ? $laporan->tracking->last() : null;
+                        @endphp
+                        @if($lastTracking && $lastTracking->status == 'Tidak Terselesaikan')
+                            <a href="{{ route('dinas.laporan.pesanTidakTerselesaikan', $notif->pengaduan_id) }}"
+                               onclick="markAsRead({{ $notif->notifikasi_id }})">
+                                <h3 class="font-semibold text-hitam">{{ $notif->judul_notifikasi }}</h3>
+                                <p class="text-sm text-hitam/70 mt-1">{{ $notif->isi_notifikasi }}</p>
+                                <p class="text-xs text-hitam/50 mt-1">{{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}</p>
+                            </a>
+                        @else
+                            <a href="{{ route('dinas.laporan.pesanBelumDirespon', $notif->pengaduan_id) }}"
+                               onclick="markAsRead({{ $notif->notifikasi_id }})">
+                                <h3 class="font-semibold text-hitam">{{ $notif->judul_notifikasi }}</h3>
+                                <p class="text-sm text-hitam/70 mt-1">{{ $notif->isi_notifikasi }}</p>
+                                <p class="text-xs text-hitam/50 mt-1">{{ \Carbon\Carbon::parse($notif->created_at)->diffForHumans() }}</p>
+                            </a>
+                        @endif
                     @else
                         <a href="{{ route('dinas.laporan.step9.ditolak', $notif->pengaduan_id) }}"
                            onclick="markAsRead({{ $notif->notifikasi_id }})">
