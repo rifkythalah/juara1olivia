@@ -20,6 +20,9 @@ class LaporanPengaduanController extends Controller
 {
     public function store(Request $request)
     {
+        \Log::info('Request all', $request->all());
+        \Log::info('Request files', $request->allFiles());
+
         $request->validate([
             'foto' => 'required|image|mimes:jpeg,png,jpg|max:5120', // max 5MB
             'latitude' => 'required|numeric',
@@ -27,6 +30,7 @@ class LaporanPengaduanController extends Controller
             'alamat' => 'required|string',
             'deskripsi' => 'required|string',
         ]);
+        \Log::info('Validation passed');
 
         $masyarakat = Auth::user()->masyarakat;
         $masyarakatId = $masyarakat->id ?? null;
@@ -34,10 +38,10 @@ class LaporanPengaduanController extends Controller
         $longitude = $request->input('longitude');
 
         // 1. CEK COOLDOWN 1 HARI
-        if ($masyarakat->last_report_at && now()->diffInHours($masyarakat->last_report_at) < 24) {
+        if ($masyarakat->last_report_at && now()->diffInMinutes($masyarakat->last_report_at) < 2) {
             return response()->json([
                 'success' => false,
-                'message' => 'Anda hanya bisa mengirim 1 laporan per hari. Silakan coba lagi besok.'
+                'message' => 'Anda hanya bisa mengirim 1 laporan per 2 menit. Silakan coba lagi besok.'
             ]);
         }
 
@@ -80,9 +84,11 @@ class LaporanPengaduanController extends Controller
             'waktu_menunggu_expired' => now()->addMinutes(2),
         ]);
 
-        // 5. UPDATE COOLDOWN
-        $masyarakat->last_report_at = now();
-        $masyarakat->save();
+        if ($laporan) {
+            // 5. UPDATE COOLDOWN
+            $masyarakat->last_report_at = now();
+            $masyarakat->save();
+        }
 
         return response()->json([
             'success' => true,
@@ -1018,17 +1024,33 @@ class LaporanPengaduanController extends Controller
      */
     public function laporanPusat()
     {
+        // Ambil laporan yang di-escalate ke pusat dan statusnya Menunggu
         $belumRespon = \App\Models\LaporanPengaduan::where('escalated_to_pusat', 1)
             ->where('status', 'Menunggu')
             ->get();
 
-        // Ambil hanya laporan yang tracking terakhirnya "Tidak Terselesaikan"
+        // Ambil laporan yang tracking terakhirnya "Tidak Terselesaikan"
         $trackingIds = \App\Models\TrackingLaporan::where('escalated_to_pusat', 1)
             ->where('status', 'Tidak Terselesaikan')
             ->pluck('pengaduan_id');
         $tidakTerselesaikan = \App\Models\LaporanPengaduan::whereIn('id', $trackingIds)->get();
 
+        // Gabungkan
         $laporans = $belumRespon->merge($tidakTerselesaikan);
+
+        // FILTER: Hapus laporan yang tracking terakhirnya sub_status == 'menunggu_verifikasi_admin'
+        $laporans = $laporans->filter(function($laporan) {
+            $lastTracking = $laporan->tracking->sortByDesc('created_at')->first();
+            // Hapus jika status "Tidak Terselesaikan" DAN sub_status terakhir "menunggu_verifikasi_admin"
+            if ($laporan->status == 'Tidak Terselesaikan' && $lastTracking && $lastTracking->sub_status == 'menunggu_verifikasi_admin') {
+                return false;
+            }
+            // Hapus juga jika sub_status terakhir "menunggu_verifikasi_admin" (opsional, jika ingin lebih strict)
+            if ($lastTracking && $lastTracking->sub_status == 'menunggu_verifikasi_admin') {
+                return false;
+            }
+            return true;
+        });
 
         return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat', compact('laporans'));
     }

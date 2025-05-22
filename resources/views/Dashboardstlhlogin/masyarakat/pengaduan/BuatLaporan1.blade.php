@@ -356,7 +356,7 @@
     <div class="bg-yellow-400 rounded-2xl px-8 py-8 max-w-lg w-full text-center shadow-lg relative">
         <div class="text-sm sm:text-2xl font-bold text-black mb-4">
             Mohon maaf tidak bisa mengirim laporan baru.<br>
-            Anda harus menunggu:
+            Anda harus menunggu (2 menit):
         </div>
         <div id="cooldownTimer" class="text-3xl sm:text-5xl font-bold text-black mb-6 font-mono">
             <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
@@ -573,8 +573,8 @@ function startGeoTracking() {
         if(!isMobile && isLocalhost) {
             console.log("Simulating location for desktop localhost");
             currentLocation = {
-                latitude: -7.952417707888808,
-                longitude: 112.62049273440574,
+                latitude:  -7.955598648412304,
+                longitude:  112.61190110258167,
                 accuracy: 5
             };
             updateGeoDisplay(); // Panggil update setelah set lokasi

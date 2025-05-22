@@ -109,12 +109,11 @@ Route::middleware('auth')->group(function () {
 
             if ($lastReport) {
                 $now = now();
-                $nextReportTime = \Carbon\Carbon::parse($lastReport)->addHours(24);
+                $nextReportTime = \Carbon\Carbon::parse($lastReport)->addMinutes(2);
                 if ($now->lt($nextReportTime)) {
                     $canReport = false;
                     $remainingTime = [
-                        'hours' => $now->diffInHours($nextReportTime),
-                        'minutes' => $now->diffInMinutes($nextReportTime) % 60,
+                        'minutes' => $now->diffInMinutes($nextReportTime),
                         'seconds' => $now->diffInSeconds($nextReportTime) % 60,
                         'total_seconds' => $now->diffInSeconds($nextReportTime)
                     ];
@@ -125,7 +124,7 @@ Route::middleware('auth')->group(function () {
                 'canReport' => $canReport,
                 'remainingTime' => $remainingTime,
                 'lastReport' => $lastReport ? \Carbon\Carbon::parse($lastReport)->toDateTimeString() : null,
-                'nextReport' => $lastReport ? \Carbon\Carbon::parse($lastReport)->addHours(24)->toDateTimeString() : null
+                'nextReport' => $lastReport ? \Carbon\Carbon::parse($lastReport)->addMinutes(2)->toDateTimeString() : null
             ]);
         });
 
