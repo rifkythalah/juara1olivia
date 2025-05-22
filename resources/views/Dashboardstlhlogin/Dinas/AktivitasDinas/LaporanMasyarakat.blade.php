@@ -97,7 +97,11 @@
                                         <span class="px-3 py-1 text-sm font-medium text-blue-900 bg-blue-100 rounded-full">Sedang Diproses</span>
                                     @endif
                                     @if($trackProses && $trackProses->status == 'Tidak Terselesaikan')
-                                        <span class="px-3 py-1 text-sm font-medium text-red-900 bg-red-100 rounded-full">Terlambat Terselesaikan</span>
+                                        <a href="{{ route('dinas.laporan.lanjutan', $laporan->id) }}">
+                                            <span class="px-3 py-1 text-sm font-medium text-red-900 bg-red-100 rounded-full cursor-pointer">
+                                                Terlambat Terselesaikan
+                                            </span>
+                                        </a>
                                     @endif
                                 </td>
                                 <td class="px-4 py-4 text-center align-top">

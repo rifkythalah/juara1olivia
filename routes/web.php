@@ -368,7 +368,7 @@ Route::get('/escalate-menunggu', [LaporanPengaduanController::class, 'escalateMe
 
 
 // Route untuk laporan belum terselesaikan
-Route::get('/pemerintahpusat/laporan/belumterselesaikan/{id}', [PusatController::class, 'laporanBelumTerselesaikan'])
+Route::get('/pemerintahpusat/laporan/belumterselesaikan/{id}', [LaporanPengaduanController::class, 'laporanBelumTerselesaikan'])
     ->name('pemerintahpusat.laporan.belumterselesaikan.detail');
 
 Route::post('/pemerintahpusat/laporan/belum-terselesaikan/{id}/kirim-pesan', [LaporanPengaduanController::class, 'kirimPesanBelumTerselesaikan'])
@@ -380,3 +380,5 @@ Route::get('/pemerintahpusat/laporan/belum-terselesaikan/pesan/{id}', [LaporanPe
 
 // Halaman detail pesan pusat (untuk dinas)
 Route::get('/dinas/laporan/pesan-tidak-terselesaikan/{id}', [LaporanPengaduanController::class, 'pesanTidakTerselesaikanDinas'])->name('dinas.laporan.pesanTidakTerselesaikan');
+
+Route::get('/debug-escalate', [\App\Http\Controllers\LaporanPengaduanController::class, 'escalateUnfinishedLaporan']);

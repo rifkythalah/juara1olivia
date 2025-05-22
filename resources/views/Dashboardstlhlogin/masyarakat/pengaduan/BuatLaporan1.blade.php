@@ -73,7 +73,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
                         </svg>
                     </div>
-                    <h3 class="text-center sm:text-left text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-800">
+                    <h3 class="text-center sm:text-left text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-800 hover:text-yellow-600 transition-colors">
                         Buat Laporan Baru
                     </h3>
                 </div>
@@ -573,8 +573,8 @@ function startGeoTracking() {
         if(!isMobile && isLocalhost) {
             console.log("Simulating location for desktop localhost");
             currentLocation = {
-                latitude: -7.953419020102603,
-                longitude: 112.6235384884823,
+                latitude: -7.952417707888808,
+                longitude: 112.62049273440574,
                 accuracy: 5
             };
             updateGeoDisplay(); // Panggil update setelah set lokasi

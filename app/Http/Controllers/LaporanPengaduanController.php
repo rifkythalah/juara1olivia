@@ -971,15 +971,44 @@ class LaporanPengaduanController extends Controller
             ->get();
 
         foreach ($penyelesaianList as $penyelesaian) {
+            $laporan = \App\Models\LaporanPengaduan::find($penyelesaian->pengaduan_id);
+            if (!$laporan) continue;
+
+            // Cek tracking terakhir
+            $lastTracking = \App\Models\TrackingLaporan::where('pengaduan_id', $laporan->id)
+                ->orderBy('created_at', 'desc')->first();
+
+            // Jika sudah ada tracking Selesai, Ditolak, atau menunggu_verifikasi_admin, SKIP
+            $adaTrackingFinal = \App\Models\TrackingLaporan::where('pengaduan_id', $laporan->id)
+                ->whereIn('status', ['Selesai', 'Ditolak'])
+                ->orWhere(function($q) {
+                    $q->where('status', 'Di Proses')->where('sub_status', 'menunggu_verifikasi_admin');
+                })
+                ->exists();
+
+            if ($adaTrackingFinal) continue;
+
+            // Update status penyelesaian
             $penyelesaian->status = 'Tidak Terselesaikan';
             $penyelesaian->save();
 
-            \App\Models\TrackingLaporan::create([
-                'pengaduan_id' => $penyelesaian->pengaduan_id,
-                'status' => 'Tidak Terselesaikan',
-                'keterangan' => 'Laporan tidak terselesaikan tepat waktu',
-                'escalated_to_pusat' => 1,
-            ]);
+            // Update laporan_pengaduan
+            $laporan->escalated_to_pusat = 1;
+            $laporan->save();
+
+            // Tambahkan tracking jika belum ada
+            $sudahAda = \App\Models\TrackingLaporan::where('pengaduan_id', $laporan->id)
+                ->where('status', 'Tidak Terselesaikan')
+                ->where('escalated_to_pusat', 1)
+                ->exists();
+            if (!$sudahAda) {
+                \App\Models\TrackingLaporan::create([
+                    'pengaduan_id' => $laporan->id,
+                    'status' => 'Tidak Terselesaikan',
+                    'keterangan' => 'Laporan tidak terselesaikan tepat waktu',
+                    'escalated_to_pusat' => 1,
+                ]);
+            }
         }
     }
 
@@ -1175,5 +1204,12 @@ class LaporanPengaduanController extends Controller
         $alasan_penolakan = $laporan->penyelesaian->alasan_penolakan ?? '';
         $waktu_tolak = $laporan->penyelesaian->waktu_tolak ?? $laporan->updated_at;
         return view('Dashboardstlhlogin.pemerintahpusat.notifikasi.notifikasiditolak', compact('laporan', 'alasan_penolakan', 'waktu_tolak', 'notifikasi'));
+    }
+
+    public function laporanBelumTerselesaikan($id)
+    {
+        $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
+        $penyelesaian = $laporan->penyelesaian;
+        return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan', compact('laporan', 'penyelesaian'));
     }
 }
