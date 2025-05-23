@@ -72,39 +72,13 @@
                         <div class="space-y-3">
                             <label class="block text-base font-semibold text-gray-800">Tanggal Estimasi Selesai</label>
                             <input type="text"
-                                   value="{{ $penyelesaian->tanggal_selesai }}"
+                                   value="{{ $penyelesaian->tanggal_selesai }}" 
                                    readonly
                                    class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 bg-gray-50/50 transition-all">
                         </div>
-                            <div class="flex items-center mb-4">
-                                <div class="h-8 w-1 bg-yellow-400 rounded-full mr-3">
-                                
-                                </div>
-                                @php
-    $start = \Carbon\Carbon::parse($penyelesaian->tanggal_mulai);
-    $end = \Carbon\Carbon::parse($penyelesaian->tanggal_selesai);
-@endphp
-<div id="countdown"></div>
-<script>
-    let end = new Date("{{ $end->format('Y-m-d H:i:s') }}").getTime();
-    let x = setInterval(function() {
-        let now = new Date().getTime();
-        let distance = end - now;
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("countdown").innerHTML = "Waktu habis! Laporan akan di-escalate ke pusat.";
-            // Optional: AJAX trigger ke backend untuk update status (atau biarkan cron/scheduler yang handle)
-        } else {
-            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById("countdown").innerHTML =
-                days + " hari " + hours + " jam " + minutes + " menit " + seconds + " detik";
-        }
-    }, 1000);
-</script>
-                            </div>
+                        
+                        <div class="text-red-500">Dinas tidak menyelesaikan laporan</div>
+                           
                         <!-- Deskripsi Pengerjaan -->
                         <div class="space-y-3">
                             <label class="block text-base font-semibold text-gray-800">Deskripsi Detail Pengerjaan</label>

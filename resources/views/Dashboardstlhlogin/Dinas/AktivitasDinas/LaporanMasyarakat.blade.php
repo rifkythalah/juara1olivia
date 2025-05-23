@@ -15,7 +15,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
-                <select name="status" class="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <select name="status" onchange="this.form.submit()" class="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
                     <option value="">Semua Status</option>
                     <option value="Menunggu" {{ request('status') == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
                     <option value="Di Proses" {{ request('status') == 'Di Proses' ? 'selected' : '' }}>Di Proses</option>

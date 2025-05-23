@@ -20,6 +20,7 @@ class LaporanPengaduanController extends Controller
 {
     public function store(Request $request)
     {
+        \Log::info('Masuk ke store laporan', ['user_id' => Auth::id()]);
         \Log::info('Request all', $request->all());
         \Log::info('Request files', $request->allFiles());
 
@@ -41,7 +42,7 @@ class LaporanPengaduanController extends Controller
         if ($masyarakat->last_report_at && now()->diffInMinutes($masyarakat->last_report_at) < 2) {
             return response()->json([
                 'success' => false,
-                'message' => 'Anda hanya bisa mengirim 1 laporan per 2 menit. Silakan coba lagi besok.'
+                'message' => 'Anda hanya bisa mengirim 1 laporan per 2 menit. Silakan coba lagi nanti.'
             ]);
         }
 
@@ -88,6 +89,7 @@ class LaporanPengaduanController extends Controller
             // 5. UPDATE COOLDOWN
             $masyarakat->last_report_at = now();
             $masyarakat->save();
+            \Log::info('Laporan berhasil disimpan', ['laporan_id' => $laporan->id]);
         }
 
         return response()->json([

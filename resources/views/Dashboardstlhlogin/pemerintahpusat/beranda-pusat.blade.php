@@ -10,23 +10,11 @@
     <div class="flex justify-between items-center mb-2 sm:mb-3">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 ">Beranda</h2>
     </div>
-    <p class="font-light mb-2">Beranda/ Statistik Daerah </p>
+    <p class="font-light mb-2">Penilaian Dinas terhadap penyelesaian Laporan </p>
     <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
 
     <!-- Main Content Section -->
     <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-            <h3 class="text-xl font-bold text-gray-800 mb-4 md:mb-0">Statistik Seluruh Daerah</h3>
-
-            <!-- Search Bar -->
-            <div class="relative w-full md:w-96">
-                <input type="text" placeholder="Nama Daerah" class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-kuning focus:border-transparent shadow-sm">
-                <svg class="absolute right-4 top-3.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </div>
-        </div>
-
         <!-- Table -->
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white">
