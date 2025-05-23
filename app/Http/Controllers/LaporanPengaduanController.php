@@ -86,10 +86,19 @@ class LaporanPengaduanController extends Controller
         ]);
 
         if ($laporan) {
-            // 5. UPDATE COOLDOWN
+            // 5. UPDATE COOLDOWN DAN TAMBAH POIN
+            // Ambil kembali model masyarakat untuk memastikan data terbaru
+            $masyarakat = $laporan->masyarakat; // Ambil relasi masyarakat dari laporan yang baru dibuat
+
+            // Setel waktu laporan terakhir dan tambahkan poin
             $masyarakat->last_report_at = now();
+            $masyarakat->poin += 10; // Tambahkan poin (Pastikan ini sesuai dengan logika bisnis Anda)
+
+            // Simpan perubahan pada model masyarakat
             $masyarakat->save();
-            \Log::info('Laporan berhasil disimpan', ['laporan_id' => $laporan->id]);
+
+            \Log::info('Masyarakat mendapat 10 poin dari laporan baru', ['user_id' => $masyarakat->user_id, 'current_poin' => $masyarakat->poin]);
+            \Log::info('Laporan berhasil disimpan dan cooldown diperbarui', ['laporan_id' => $laporan->id, 'new_last_report_at' => $masyarakat->last_report_at]);
         }
 
         return response()->json([
@@ -506,14 +515,14 @@ class LaporanPengaduanController extends Controller
                 'id_admin' => $admin->id
             ]);
         } else {
-            $laporan->status = 'Ditolak';
+            $laporan->status = 'Di Proses';
             $laporan->save();
 
             \App\Models\TrackingLaporan::create([
                 'pengaduan_id' => $laporan->id,
                 'status' => 'Di Proses',
                 'sub_status' => 'perlu_perbaikan_dinas',
-                'keterangan' => $request->keterangan ?? 'Laporan ditolak oleh admin',
+                'keterangan' => $request->keterangan ?? 'Laporan ditolak oleh admin, perlu perbaikan oleh dinas',
                 'id_admin' => $admin->id
             ]);
         }
@@ -661,7 +670,8 @@ class LaporanPengaduanController extends Controller
         ]);
 
         $laporan = LaporanPengaduan::findOrFail($id);
-        $masyarakatId = auth()->user()->masyarakat->id;
+        $masyarakat = auth()->user()->masyarakat; // Ambil model Masyarakat
+        $masyarakatId = $masyarakat->id;
 
         // Cegah double ulasan
         if ($laporan->ulasan) {
@@ -674,6 +684,11 @@ class LaporanPengaduanController extends Controller
             'rating' => $request->rating,
             'ulasan' => $request->ulasan
         ]);
+
+        // TAMBAH POIN (KEDUA)
+        $masyarakat->increment('poin', 5);
+        \Log::info('Masyarakat mendapat 5 poin dari ulasan', ['user_id' => $masyarakat->user_id, 'current_poin' => $masyarakat->poin]);
+
 
         return redirect()->route('masyarakat.laporan.ulasan', $laporan->id)->with('success', 'Ulasan berhasil dikirim!');
     }

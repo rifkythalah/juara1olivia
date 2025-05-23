@@ -9,7 +9,7 @@
         <!-- Poin Card -->
         <div class="w-full max-w-md bg-kuning rounded-3xl shadow-lg mb-8 p-8 text-center border border-gray-300">
             <div class="text-lg font-semibold mb-2">Yeay kamu sudah mendapat</div>
-            <div class="text-lg font-bold mb-1">958</div>
+            <div class="text-lg font-bold mb-1">{{ $user->masyarakat->poin ?? 0 }}</div>
             <div class="text-lg italic">Poin</div>
         </div>
 
