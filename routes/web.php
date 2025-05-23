@@ -232,7 +232,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dinas/laporan/masyarakat', [LaporanPengaduanController::class, 'laporanUtamaDinas'])->name('dinas.laporan.masyarakat');
 
         Route::get('/dinas/statistik', function () {
-            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.StatistikDinas');
+            $dinasList = \App\Models\Dinas::all(); // Ambil semua data dinas
+            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.StatistikDinas', compact('dinasList')); // Lewatkan data ke view
         })->name('dinas.statistik');
 
         Route::get('/dinas/notifikasi', [LaporanPengaduanController::class, 'notifikasiDinas'])->name('dinas.notifikasi');

@@ -25,7 +25,7 @@
       </span>
     </a>
 
-    <!-- Statik Pemerintah -->
+    <!-- Statik Dinas -->
     <a href="/dinas/statistik" 
        class="nav-link px-6 py-3 font-bold rounded-lg border-2 border-yellow-500 transition-all duration-300 
        {{ Request::is('dinas.statistik') ? 'active-nav' : '' }}">

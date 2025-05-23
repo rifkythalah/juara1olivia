@@ -514,6 +514,23 @@ class LaporanPengaduanController extends Controller
                 'keterangan' => $request->keterangan ?? 'Laporan diverifikasi selesai oleh admin',
                 'id_admin' => $admin->id
             ]);
+
+            // === TAMBAH LOGIKA INI UNTUK POINT DINAS ===
+            $dinas = $laporan->dinas; // Asumsi ada relasi 'dinas' di model LaporanPengaduan
+            if ($dinas) {
+                $dinas->point += 10;
+                // Cek jika poin mencapai atau melebihi 100
+                if ($dinas->point >= 100) {
+                    // Simpan poin sebelum reset untuk menentukan warna teks di view (jika diperlukan di view, tapi logic di view sudah based on current point)
+                    // Untuk reset: set poin ke 0. Logic warna teks di view akan menangani poin 0.
+                    $dinas->point = 0;
+                    // Di sini Anda bisa menambahkan logika lain jika ada, misalnya mencatat bahwa dinas mencapai level tertentu sebelum reset.
+                }
+                $dinas->save();
+                \Log::info('Dinas mendapat 10 poin dari verifikasi admin', ['dinas_id' => $dinas->id, 'current_point' => $dinas->point]);
+            }
+            // ============================================
+
         } else {
             $laporan->status = 'Di Proses';
             $laporan->save();
@@ -685,10 +702,18 @@ class LaporanPengaduanController extends Controller
             'ulasan' => $request->ulasan
         ]);
 
-        // TAMBAH POIN (KEDUA)
+        // TAMBAH POIN UNTUK MASYARAKAT (INI SUDAH ADA)
         $masyarakat->increment('poin', 5);
         \Log::info('Masyarakat mendapat 5 poin dari ulasan', ['user_id' => $masyarakat->user_id, 'current_poin' => $masyarakat->poin]);
 
+        // === TAMBAH LOGIKA INI UNTUK POINT DINAS ===
+        $dinas = $laporan->dinas; // Ambil dinas yang menangani laporan
+        if ($dinas) {
+            $dinas->point += $request->rating; // Tambahkan poin sejumlah rating
+            $dinas->save();
+            \Log::info('Dinas mendapat ' . $request->rating . ' poin dari ulasan masyarakat', ['dinas_id' => $dinas->id, 'rating' => $request->rating, 'current_point' => $dinas->point]);
+        }
+        // ============================================
 
         return redirect()->route('masyarakat.laporan.ulasan', $laporan->id)->with('success', 'Ulasan berhasil dikirim!');
     }
