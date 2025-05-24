@@ -76,7 +76,7 @@
     <!-- Rating Ulasan Laporanmu Section -->
     @if($ulasan)
         <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 border border-gray-400">
-            <h3 class="text-lg font-bold text-center text-gray-800 mb-3">Rating Ulasan Laporanmu</h3>
+            <h3 class="text-lg font-bold text-center text-gray-800 mb-3">Rating Ulasan Laporan</h3>
             <div class="flex items-center justify-center space-x-2 mb-4">
                 @for($i=1; $i<=5; $i++)
                     <svg class="h-8 w-8 {{ $i <= $ulasan->rating ? 'text-yellow-500' : 'text-gray-300' }}" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300 hover:text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
