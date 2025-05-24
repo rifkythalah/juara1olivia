@@ -22,8 +22,7 @@
 </head>
 
 <body>
-
-
+    <script>window.isLoggedIn = false;</script>
 
     <!-- Header -->
     <header class="bg-white absolute top-0 h-[90px] left-0 w-full flex items-center shadow-lg lg:py-0">
@@ -120,7 +119,7 @@
         <!-- Background kuning memenuhi seluruh lebar layar -->
         <div class="w-full bg-kuning text-center py-4">
             <!-- Teks di bawah gambar -->
-            <p class="text-hitam text-[18px] font-bold">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
+            <p class="text-hitam text-[18px] font-bold">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
         </div>
     </footer>
 

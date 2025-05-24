@@ -1365,6 +1365,10 @@ class LaporanPengaduanController extends Controller
         $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
         $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
 
-        return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.StatistikPemerintahMasyarakat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+        if (auth()->check()) {
+            return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.StatistikPemerintahMasyarakat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+        } else {
+            return view('DasboardBelumLogin.Aktivitas.StatistikPemerintah', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+        }
     }
 }

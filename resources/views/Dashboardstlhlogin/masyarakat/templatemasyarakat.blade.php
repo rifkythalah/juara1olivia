@@ -23,6 +23,7 @@
 </head>
 
 <body class="flex flex-col min-h-screen">
+    <script>window.isLoggedIn = true;</script>
 
     <!-- Header -->
     <header class="bg-white absolute top-0 h-[90px] left-0 w-full flex items-center shadow-lg lg:py-0">

@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\PusatController;
+use App\Models\LaporanPengaduan;
+use App\Models\Dinas;
 
 // Public Routes (No Authentication Required)
 Route::get('/', function () {
@@ -55,13 +57,18 @@ Route::get('/LaporanSaya', function () {
     return view('DasboardBelumLogin.Aktivitas.LaporanSaya');
 })->name('laporan.saya');
 
-Route::get('/LaporanWarga', function () {
-    return view('DasboardBelumLogin.Aktivitas.LaporanWarga');
-})->name('laporan.warga');
-
 Route::get('/StatistikPemerintah', function () {
-    return view('DasboardBelumLogin.Aktivitas.StatistikPemerintah');
-})->name('statistik.pemerintah');
+    $dinasList = Dinas::all();
+    $ditolakCount = LaporanPengaduan::where('status', 'Ditolak')->count();
+    $selesaiCount = LaporanPengaduan::where('status', 'Selesai')->count();
+    $prosesCount = LaporanPengaduan::where('status', 'Di Proses')->count();
+    return view('DasboardBelumLogin.Aktivitas.StatistikPemerintah', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+})->name('pemerintah.statistik');
+
+Route::get('/LaporanWarga', function () {
+    $laporans = LaporanPengaduan::with('tracking')->latest()->get();
+    return view('DasboardBelumLogin.Aktivitas.LaporanWarga', compact('laporans'));
+})->name('laporan.warga');
 
 // Auth Processing Routes
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');

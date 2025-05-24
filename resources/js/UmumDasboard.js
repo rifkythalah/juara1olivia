@@ -91,19 +91,21 @@ document.addEventListener("DOMContentLoaded", function () {
                         : "";
 
                     // Popup detail
-                    let trackingUrl = "#";
-                    if (marker.status === "Menunggu") {
-                        trackingUrl = `/masyarakat/laporan/menunggu/${marker.id}`;
-                    } else if (marker.status === "Di Proses") {
-                        if (marker.sub_status === "menunggu_verifikasi_admin") {
-                            trackingUrl = `/masyarakat/laporan/proses/ditindaklanjuti/${marker.id}`;
-                        } else {
-                            trackingUrl = `/masyarakat/laporan/proses/diselesaikan/${marker.id}`;
+                    let trackingUrl = "/login";
+                    if (window.isLoggedIn) {
+                        if (marker.status === "Menunggu") {
+                            trackingUrl = `/masyarakat/laporan/menunggu/${marker.id}`;
+                        } else if (marker.status === "Di Proses") {
+                            if (marker.sub_status === "menunggu_verifikasi_admin") {
+                                trackingUrl = `/masyarakat/laporan/proses/ditindaklanjuti/${marker.id}`;
+                            } else {
+                                trackingUrl = `/masyarakat/laporan/proses/diselesaikan/${marker.id}`;
+                            }
+                        } else if (marker.status === "Ditolak") {
+                            trackingUrl = `/masyarakat/laporan/ditolak/${marker.id}`;
+                        } else if (marker.status === "Selesai") {
+                            trackingUrl = `/masyarakat/laporan/ulasan/${marker.id}`;
                         }
-                    } else if (marker.status === "Ditolak") {
-                        trackingUrl = `/masyarakat/laporan/ditolak/${marker.id}`;
-                    } else if (marker.status === "Selesai") {
-                        trackingUrl = `/masyarakat/laporan/ulasan/${marker.id}`;
                     }
                     let popupContent = `
                         <b>${marker.lokasi}</b><br>
