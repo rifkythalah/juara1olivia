@@ -86,7 +86,6 @@ class User extends Authenticatable
 
     public function dinas()
     {
-        return $this->belongsToMany(Dinas::class, 'pemerintah_pusat_dinas', 'user_id', 'dinas_id')
-            ->withTimestamps();
+        return $this->hasOne(Dinas::class, 'user_id');
     }
 }

@@ -232,8 +232,45 @@ Route::middleware('auth')->group(function () {
         Route::get('/dinas/laporan/masyarakat', [LaporanPengaduanController::class, 'laporanUtamaDinas'])->name('dinas.laporan.masyarakat');
 
         Route::get('/dinas/statistik', function () {
-            $dinasList = \App\Models\Dinas::all(); // Ambil semua data dinas
-            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.StatistikDinas', compact('dinasList')); // Lewatkan data ke view
+            $dinasList = \App\Models\Dinas::all(); // Ambil semua data dinas (untuk tabel)
+
+            // Ambil user dinas yang sedang login dan model Dinas terkait
+            $user = Auth::user();
+            $dinasUser = $user->dinas()->first(); // Ambil model Dinas terkait user
+
+            \Log::info('Checking dinasUser in statistik route', ['user_id' => $user->id, 'dinasUser_id' => $dinasUser ? $dinasUser->id : null, 'dinasUser_exists' => !is_null($dinasUser)]);
+
+            $ditolakCount = 0;
+            $selesaiCount = 0;
+            $prosesCount = 0;
+
+            if ($dinasUser) {
+                // Hitung laporan Selesai, Di Proses, dan Ditolak untuk dinas yang sedang login
+                $ditolakCount = \App\Models\LaporanPengaduan::where('dinas_id', $dinasUser->id)
+                                ->where('status', 'Ditolak')
+                                ->count();
+
+                $selesaiCount = \App\Models\LaporanPengaduan::where('dinas_id', $dinasUser->id)
+                                ->where('status', 'Selesai')
+                                ->count();
+
+                $prosesCount = \App\Models\LaporanPengaduan::where('dinas_id', $dinasUser->id)
+                                ->where('status', 'Di Proses')
+                                ->count();
+
+                \Log::info('Statistik Dinas Count (Filter Dinas ID)', [
+                    'dinas_id' => $dinasUser->id,
+                    'ditolak' => $ditolakCount,
+                    'selesai' => $selesaiCount,
+                    'proses', $prosesCount,
+                ]);
+
+            } else {
+                 \Log::warning('dinasUser not found for logged in user', ['user_id' => $user->id]);
+            }
+
+            // Lewatkan data dinasList (untuk tabel) dan counts (untuk chart) ke view
+            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.StatistikDinas', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
         })->name('dinas.statistik');
 
         Route::get('/dinas/notifikasi', [LaporanPengaduanController::class, 'notifikasiDinas'])->name('dinas.notifikasi');

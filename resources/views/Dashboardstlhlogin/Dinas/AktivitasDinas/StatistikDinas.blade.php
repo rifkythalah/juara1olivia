@@ -74,8 +74,8 @@
                     </div>
                 </div>
 
-                <!-- Chart Container dengan Responsif Height -->
-                <div class="w-full bg-white p-4 rounded-lg shadow-sm min-h-[300px] md:min-h-[400px] flex flex-col">
+              <!-- Chart Container dengan Responsif Height -->
+              <div class="w-full bg-white p-4 rounded-lg shadow-sm min-h-[300px] md:min-h-[400px] flex flex-col">
                     <div class="flex-grow relative">
                         <canvas id="statistikChart" class="w-full h-full"></canvas>
                     </div>
@@ -84,19 +84,19 @@
                 @push('scripts')
                 <script src="{{ asset('js/chart.js/chart.umd.min.js') }}"></script>
                 <script>
-                    document.addEventListener('DOMContentLoaded'd, function() {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const ctx = document.getElementById('statistikChart').getContext('2d');
                         
                         const chartConfig = {
                             type: 'doughnut',
                             data: {
-                                labels: ['Di tolak', 'Selesai', 'Di Proses'],
+                               labels: ['Di Tolak', 'Selesai', 'Di Proses'],
                                 datasets: [{
-                                    data: [75, 35, 45],
+                                    data: [{{ $ditolakCount ?? 0 }}, {{ $selesaiCount ?? 0 }}, {{ $prosesCount ?? 0 }}],
                                     backgroundColor: [
-                                        '#FF92A5',  // Pink
-                                        '#FFD66B',  // Kuning
-                                        '#74B3FF'   // Biru
+                                        '#FF0000',  // merah
+                                        '#00FF00',  // hijau
+                                        '#74B3FF'   // biru
                                     ],
                                     borderWidth: 0,
                                     hoverOffset: 4
@@ -118,7 +118,7 @@
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Grafik Laporan Dinas',
+                                        text: 'Statistik Daerah',
                                         font: {
                                             size: window.innerWidth < 768 ? 14 : 16,
                                             weight: 'bold'
@@ -129,7 +129,7 @@
                                     },
                                     subtitle: {
                                         display: true,
-                                        text: 'Presentase Laporan Dinas',
+                                        text: 'Persentase per Kecamatan',
                                         font: {
                                             size: window.innerWidth < 768 ? 12 : 14
                                         },
@@ -173,14 +173,14 @@
                     const chartConfig = {
                         type: 'doughnut',
                         data: {
-                            labels: ['Di Tolak', 'Selesai', 'Di Proses'],
-                            datasets: [{
-                                data: [75, 25, 35, 45],
-                                backgroundColor: [
-                                    '#FF0000',  // merah
-                                    '#00FF00',  // hijau
-                                    '#74B3FF'   // biru
-                                ],
+                           labels: ['Di Tolak', 'Selesai', 'Di Proses'],
+                                datasets: [{
+                                    data: [{{ $ditolakCount ?? 0 }}, {{ $selesaiCount ?? 0 }}, {{ $prosesCount ?? 0 }}],
+                                    backgroundColor: [
+                                        '#FF0000',  // merah
+                                        '#00FF00',  // hijau
+                                        '#74B3FF'   // biru
+                                    ],
                                 borderWidth: 0,
                                 hoverOffset: 4
                             }]
@@ -201,7 +201,7 @@
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Grafik Laporan Dinas',
+                                    text: 'Statistik Daerah',
                                     font: {
                                         size: window.innerWidth < 768 ? 14 : 16,
                                         weight: 'bold'
@@ -212,7 +212,7 @@
                                 },
                                 subtitle: {
                                     display: true,
-                                    text: 'Presentase Laporan Dinas',
+                                    text: 'Persentase per Kecamatan',
                                     font: {
                                         size: window.innerWidth < 768 ? 12 : 14
                                     },
@@ -244,6 +244,7 @@
                     });
                 });
             </script>
+            </div>
         </div>
     </div>
 </section>
