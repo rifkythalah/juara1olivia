@@ -14,7 +14,7 @@
             <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <a href="/masyarakat/aktivitas/LaporanSaya"
                    class="nav-link px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold rounded-lg transition-all duration-300
-                   {{ Request::is('/masyarakat/aktivitas/LaporanSaya') ? 'active-nav' : '' }}">
+                   {{ Request::is('masyarakat/aktivitas/LaporanSaya') ? 'active-nav' : '' }}">
                    Laporan Saya
                 </a>
                 <a href="/masyarakat/aktivitas/LaporanWarga"

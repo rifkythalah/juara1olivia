@@ -3,6 +3,20 @@
 
 @section('content')
 
+@if (session('success'))
+    <div class="fixed top-40 right-10 z-100 max-w-xs">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 rounded shadow-md flex items-center space-x-2" role="alert">
+            <strong class="font-bold">Success!</strong>
+            <span class="inline">{{ session('success') }}</span>
+            <button onclick="this.parentElement.remove()" class="ml-auto text-green-700 hover:text-green-900">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+@endif
+
 <section class="profil">
     <div class="container mx-auto px-2 py-6 flex flex-col items-center mt-6">
 

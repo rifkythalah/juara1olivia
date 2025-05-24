@@ -146,9 +146,7 @@ Route::middleware('auth')->group(function () {
             return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.LaporanAktif');
         })->name('masyarakat.aktivitas');
 
-        Route::get('/masyarakat/aktivitas/StatistikDinas', function () {
-            return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.StatistikPemerintahMasyarakat');
-        })->name('masyarakat.aktivitas');
+        Route::get('/masyarakat/aktivitas/StatistikDinas', [LaporanPengaduanController::class, 'statistikPemerintahMasyarakat'])->name('masyarakat.aktivitas.statistik');
 
         Route::get('/masyarakat/trackinglaporan/LaporanUlasan', function () {
             return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanUlasan');

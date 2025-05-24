@@ -160,8 +160,26 @@ class LaporanPengaduanController extends Controller
 
     public function getAllLaporan()
     {
-        $laporans = \App\Models\LaporanPengaduan::select('latitude', 'longitude', 'lokasi', 'status', 'id', 'deskripsi', 'created_at')->get();
-        return response()->json($laporans);
+        $laporans = \App\Models\LaporanPengaduan::with(['tracking' => function($q) {
+            $q->orderBy('created_at', 'desc');
+        }])->get();
+
+        $result = $laporans->map(function($laporan) {
+            $lastTracking = $laporan->tracking->first();
+            return [
+                'id' => $laporan->id,
+                'latitude' => $laporan->latitude,
+                'longitude' => $laporan->longitude,
+                'lokasi' => $laporan->lokasi,
+                'status' => $laporan->status,
+                'deskripsi' => $laporan->deskripsi,
+                'created_at' => $laporan->created_at,
+                'foto_video' => $laporan->foto_video,
+                'sub_status' => $lastTracking ? $lastTracking->sub_status : null,
+            ];
+        });
+
+        return response()->json($result);
     }
 
     public function showTracking($id)
@@ -307,7 +325,7 @@ class LaporanPengaduanController extends Controller
     public function detailLaporanMasyarakat($id)
     {
         $laporan = \App\Models\LaporanPengaduan::with('tracking')->findOrFail($id);
-        
+
         // Arahkan ke halaman yang sesuai berdasarkan status
         switch($laporan->status) {
             case 'Menunggu':
@@ -363,8 +381,6 @@ class LaporanPengaduanController extends Controller
 
         return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep4Lanjutan', compact('laporan', 'penyelesaian'));
     }
-
-    
 
     public function hasilFoto($id)
     {
@@ -1300,5 +1316,55 @@ class LaporanPengaduanController extends Controller
         }
         // Belum pernah kirim pesan, tampilkan form kirim pesan
         return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan', compact('laporan', 'penyelesaian'));
+    }
+
+    public function laporanSayaMasyarakat()
+    {
+        $user = auth()->user();
+        $masyarakatId = $user->masyarakat->id ?? null;
+        $laporans = \App\Models\LaporanPengaduan::with('tracking')
+            ->where('masyarakat_id', $masyarakatId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.LaporanSayaMasyarakat', compact('laporans'));
+    }
+
+    public function laporanWargaMasyarakat(Request $request)
+    {
+        $user = auth()->user();
+        $masyarakatId = $user->masyarakat->id ?? null;
+
+        $query = \App\Models\LaporanPengaduan::with('tracking')
+            ->where('masyarakat_id', '!=', $masyarakatId);
+
+        // Optional: filter pencarian
+        if ($request->has('q')) {
+            $q = $request->input('q');
+            $query->where(function($sub) use ($q) {
+                $sub->where('deskripsi', 'like', "%$q%")
+                    ->orWhere('lokasi', 'like', "%$q%");
+            });
+        }
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $laporans = $query->orderBy('created_at', 'desc')->get();
+
+        return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.LaporanWargaMasyarakat', compact('laporans'));
+    }
+
+    public function statistikPemerintahMasyarakat()
+    {
+        // Ambil semua data dinas (untuk tabel)
+        $dinasList = \App\Models\Dinas::all();
+
+        // Hitung laporan Selesai, Di Proses, dan Ditolak untuk semua dinas (total)
+        $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
+        $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
+        $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
+
+        return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.StatistikPemerintahMasyarakat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
     }
 }
