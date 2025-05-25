@@ -3,7 +3,7 @@
 
 @section('Laporan')
 
-<section class="bg-gray-50 py-10">
+<section class="bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Search and Filter Section -->
         <div class="max-w-6xl mx-auto mb-8">
@@ -22,9 +22,6 @@
                     <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                     <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
                 </select>
-                <button type="submit" class="px-6 py-3 bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition">
-                    Terapkan
-                </button>
             </form>
         </div>
 

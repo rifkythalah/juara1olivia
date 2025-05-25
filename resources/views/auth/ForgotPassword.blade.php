@@ -25,7 +25,7 @@
                 @endif
 
                 <div class="max-w-2xl mx-auto">
-                    <div class="bg-white/80 rounded-lg p-6 mb-8">
+                    <div class="bg-white rounded-lg p-6 mb-8">
                         <p class="text-hitam mb-6">Masukkan alamat Email anda, kami akan mengirimkan alamat untuk mereset password anda melalui Email anda.</p>
 
                         <form action="{{ route('password.email') }}" method="POST">
@@ -37,14 +37,14 @@
                                     value="{{ old('email') }}">
                             </div>
 
-                            <button type="submit" class="w-full bg-white text-hitam font-bold py-3 px-4 rounded-lg hover:bg-kuning hover:ring-2 ring-white hover:text-white transition duration-200">
+                            <button type="submit" class="w-full bg-kuning text-hitam font-bold py-3 px-4 rounded-lg hover:bg-kuning hover:ring-2 ring-white hover:text-white transition duration-200">
                                 Kirim Permintaan
                             </button>
                         </form>
                     </div>
 
                     <div class="text-center">
-                        <a href="{{ route('login') }}" class="text-biru hover:text-opacity-80 transition-colors">
+                        <a href="{{ route('login') }}" class="text-white hover:text-hitam hover:text-opacity-80 transition-colors">
                             Kembali ke Login
                         </a>
                     </div>

@@ -32,18 +32,18 @@
         </div>
     </div>
 
-    <div class="container mx-auto px-8 py-4">
-        <div class="flex justify-between items-center mb-4 sm:mb-6">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Pengaduan</h2>
-            <a href="/masyarakat/pengaduan/buat/2" class="text-hitam hover:text-kuning transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div class="flex items-center gap-4 mb-4">
+            <a href="/masyarakat/pengaduan" class="p-2.5 bg-white rounded-lg transition-all duration-300 hover:bg-yellow-50 hover:shadow-md group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
             </a>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">Pengaduan</h2>
         </div>
-        <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
+        <div class="w-full h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 rounded-full shadow-sm"></div>
     </div>
-    <div class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen  py-2 px-4 sm:px-6 lg:px-8">
         <div class="max-w-full md:max-w-2xl lg:max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="p-4 flex items-center justify-center gap-4">
                 <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-black">Laporan Pengaduan Saya</h1>
@@ -61,26 +61,28 @@
                     <input type="hidden" id="longitude" name="longitude">
 
                     <div class="mt-6">
-                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-2">Alamat Laporan sesuai dengan Gmaps</label>
+                        <label for="alamat" class="block text-base font-medium text-hitam mb-2">Alamat Laporan sesuai dengan Gmaps</label>
                         <textarea
                             id="alamat"
                             name="alamat"
                             rows="3"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-gray-100"
                             placeholder="Jl. Naim desa padaan, kecamatan pakishaji."
                             required
+                            readonly
                         ></textarea>
                     </div>
 
                     <div>
-                        <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-2">Detail Permasalahan Laporan</label>
+                        <label for="deskripsi" class="block text-base font-medium text-hitam mb-2">Detail Permasalahan Laporan</label>
                         <textarea
                             id="deskripsi"
                             name="deskripsi"
                             rows="4"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-gray-100"
                             placeholder="Jalan rusak parah, mohon diperbaiki"
                             required
+                            readonly
                         ></textarea>
                     </div>
 

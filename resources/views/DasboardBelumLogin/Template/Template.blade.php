@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Link ke Swiper CDN -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 
 <body>
@@ -114,13 +115,12 @@
 
 
     <footer class="w-full">
-        <!-- Gambar di atas teks -->
-        <img src="{{ asset('img/logo/Footer.png') }}" alt="Logo Lapor.Pal!" class="mx-auto mb-4" width="1441.44" height="387.79">
+        <!-- Gambar ilustrasi kota Malang -->
+        <img src="{{ asset('img/logo/Footer.png') }}" alt="Ilustrasi Kota Malang" class="w-full h-auto" style="max-height: 250px; object-fit: cover;">
 
-        <!-- Background kuning memenuhi seluruh lebar layar -->
+        <!-- Background kuning dengan copyright text -->
         <div class="w-full bg-kuning text-center py-4">
-            <!-- Teks di bawah gambar -->
-            <p class="text-hitam text-[18px] font-bold">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
+            <p class="text-hitam font-semibold text-[13px]">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -153,3 +153,10 @@
 </body>
 
 </html>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+</script>
+</body>

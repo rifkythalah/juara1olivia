@@ -5,10 +5,9 @@
 
 <section>
     <div class="container mx-auto px-4">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-3xl font-bold text-gray-800 mb-2">Pemberitahuan</h2>
-    </div>
-    <div class="w-full h-1 bg-yellow-400 mb-6"></div>
+        <div class="flex justify-center items-center mb-6 mt-4 pt-2">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Pemberitahuan</h2>
+        </div>
 
     <div class="space-y-4">
         <!-- Notifikasi Item -->

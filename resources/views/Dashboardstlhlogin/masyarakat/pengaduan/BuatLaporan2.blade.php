@@ -2,79 +2,91 @@
 @section('title', 'Edit Alamat & Deskripsi Laporan')
 
 @section('content')
-
-<section class="py-8">
-    {{-- Header Pengaduan --}}
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Pengaduan</h2>
-        <div class="w-full h-1 bg-yellow-400"></div>
+<section class="py-6 bg-gray-50">
+    {{-- Header Pengaduan with improved styling --}}
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div class="flex items-center gap-4 mb-4">
+            <a href="/masyarakat/pengaduan" class="p-2.5 bg-white rounded-lg transition-all duration-300 hover:bg-yellow-50 hover:shadow-md group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">Pengaduan</h2>
+        </div>
+        <div class="w-full h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 rounded-full shadow-sm"></div>
     </div>
 
-    {{-- Konten Utama --}}
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-        <div class="max-w-lg w-full bg-white rounded-xl shadow-md overflow-hidden">
-            {{-- Judul Form --}}
-            <div class="p-4 text-center">
-                <h1 class="text-lg sm:text-xl font-bold text-gray-800">Edit Alamat & Deskripsi Laporan</h1>
+    {{-- Main Content with enhanced card design --}}
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+            {{-- Form Title with improved typography --}}
+            <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 text-center">Edit Alamat & Deskripsi Laporan</h1>
             </div>
 
-            {{-- Konten Form --}}
-            <div class="p-6">
-                <!-- Preview Foto -->
-                <div class="mb-6">
-                    <img id="previewImage" class="w-full h-auto object-contain rounded-lg border ring-4 ring-kuning border-kuning" src="" alt="Preview foto laporan">
-                    <div class="mt-4 flex justify-center">
-                        {{-- Tombol Ambil Foto Ulang --}}
-                        <button onclick="window.location.href='/masyarakat/pengaduan/buat/1'" class="flex items-center gap-2 bg-yellow-400 hover:bg-putih hover:text-kuning hover:ring-2 ring-kuning text-black font-semibold py-2 px-4 rounded-lg text-sm shadow cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13l-7 7-7-7m14-8l-7 7-7-7" /> {{-- Icon pensil/edit --}}
+            {{-- Form Content with better spacing --}}
+            <div class="p-8">
+                <!-- Enhanced Preview Photo Section -->
+                <div class="mb-8 bg-gray-50 p-6 rounded-xl">
+                    <img id="previewImage" class="w-full h-auto object-contain rounded-xl border-2 border-yellow-400 ring-4 ring-yellow-100 shadow-md transition-all duration-300 hover:shadow-lg" src="" alt="Preview foto laporan">
+                    <div class="mt-6 flex justify-center">
+                        <button onclick="window.location.href='/masyarakat/pengaduan/buat/1'" class="flex items-center gap-3 bg-yellow-400 hover:bg-abuabu text-gray-900 font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg group">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                             </svg>
-                            Ambil foto ulang
+                            <span>Ambil Foto Ulang</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Form Input Area -->
-                <div class= "p-5 rounded-lg shadow-inner">
-                    <form id="reportForm" action="/masyarakat/pengaduan/buat/3" method="POST" class="space-y-5">
+                <!-- Improved Form Input Area -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+                    <form id="reportForm" action="/masyarakat/pengaduan/buat/3" method="POST" class="space-y-6">
                         @csrf
                         <input type="hidden" id="imageData" name="imageData">
                         <input type="hidden" id="latitude" name="latitude">
                         <input type="hidden" id="longitude" name="longitude">
 
-                        {{-- Alamat --}}
-                        <div>
-                            <label for="alamat" class="block text-sm font-bold text-gray-700 mb-1">Edit Alamat Laporan Jika tidak sesuai dengan Gmaps <span class="text-red-500">*</span></label>
-                            <textarea id="alamat" name="alamat" placeholder="Memuat alamat otomatis..." class="w-full p-3 border border-gray-300 rounded-lg resize-none bg-white text-sm" rows="3"></textarea>
-                            {{-- Garis pemisah --}}
-                            <hr class="border-yellow-400 my-2">
-                            <small class="text-xs text-gray-600 italic">Alamat diisi otomatis berdasarkan lokasi foto. Anda bisa mengeditnya jika perlu.</small>
+                        {{-- Enhanced Address Field --}}
+                        <div class="space-y-3">
+                            <label for="alamat" class="block text-base font-semibold text-gray-800">Edit Alamat Laporan <span class="text-red-500 text-sm">*</span></label>
+                            <textarea 
+                                id="alamat" 
+                                name="alamat" 
+                                placeholder="Memuat alamat otomatis..." 
+                                class="w-full p-4 border border-gray-200 rounded-lg resize-none bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring focus:ring-yellow-100 transition-all duration-300 text-gray-700" 
+                                rows="3"
+                            ></textarea>
+                            <p class="text-sm text-gray-500 italic">Alamat diisi otomatis berdasarkan lokasi foto. Anda bisa mengeditnya jika perlu.</p>
                         </div>
 
-                        {{-- Deskripsi --}}
-                        <div>
-                            <label for="deskripsi" class="block text-sm font-bold text-gray-700 mb-1">Deskripsikan detail Permasalahan laporan</label>
-                            <textarea id="deskripsi" name="deskripsi" placeholder="Contoh : Jalan Rusak berlubang sangat parah." class="w-full p-3 border border-gray-300 rounded-lg resize-none bg-white text-sm" rows="4"></textarea>
-                             {{-- Garis pemisah --}}
-                             <hr class="border-yellow-400 my-2">
+                        {{-- Enhanced Description Field --}}
+                        <div class="space-y-3">
+                            <label for="deskripsi" class="block text-base font-semibold text-gray-800">Detail Permasalahan <span class="text-red-500 text-sm">*</span></label>
+                            <textarea 
+                                id="deskripsi" 
+                                name="deskripsi" 
+                                placeholder="Contoh: Jalan rusak berlubang sangat parah..." 
+                                class="w-full p-4 border border-gray-200 rounded-lg resize-none bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring focus:ring-yellow-100 transition-all duration-300 text-gray-700" 
+                                rows="4"
+                            ></textarea>
                         </div>
                     </form>
                 </div>
 
-                 {{-- Tombol Lanjutkan --}}
-                 <div class="mt-6 flex justify-end">
+                {{-- Enhanced Continue Button --}}
+                <div class="mt-8 flex justify-end">
                     <button
                         type="button"
                         onclick="prepareAndSubmit()"
-                        class="font-bold py-2 px-6  transition-colors flex items-center justify-center gap-2 shadow bg-kuning hover:ring-2 ring-yellow-300 hover:bg-white hover:text-kuning  text-white  rounded-full cursor-pointer"
+                        class="group flex items-center gap-3 bg-yellow-400 hover:bg-abuabu text-gray-900 font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
                     >
-                        Lanjutkan
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <span>Lanjutkan</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
-                 </div>
+                </div>
             </div>
         </div>
     </div>

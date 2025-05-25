@@ -34,14 +34,17 @@
 
 /* Warna teks saat scroll */
 .navbar-fixed #nav-menu a {
-    @apply text-white hover:text-white/90;
+    @apply text-hitam hover:text-white/90;
 }
 
 .navbar-fixed #nav-menu a.active {
-    @apply text-white;
+    @apply text-hitam;
 }
 
-
+#nav-menu.open {
+  display: block;
+  max-height: 100vh;
+}
 
 
 

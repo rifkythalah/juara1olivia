@@ -2,58 +2,165 @@
 @section('title', 'Dashboard Admin - LAPOR PAL')
 @section('content')
 
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-hitam mb-8">Dashboard Admin</h1>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Statistik Laporan -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold text-hitam mb-4">Statistik Laporan</h2>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Total Laporan</span>
-                    <span class="font-bold text-hitam">0</span>
+<div class="min-h-screen p-6">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard Admin</h1>
+            <p class="text-gray-600">Ringkasan aktivitas dan statistik sistem</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Reports Card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Total Laporan</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">0</p>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Laporan Baru</span>
-                    <span class="font-bold text-hitam">0</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Laporan Diproses</span>
-                    <span class="font-bold text-hitam">0</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600">Laporan Selesai</span>
-                    <span class="font-bold text-hitam">0</span>
+                <div class="p-3 rounded-full bg-yellow-50 text-yellow-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
                 </div>
             </div>
         </div>
 
-        <!-- Manajemen Akun -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold text-hitam mb-4">Manajemen Akun</h2>
-            <div class="space-y-4">
-                <a href="{{ route('admin.akun') }}" class="block p-4 bg-kuning hover:bg-opacity-90 rounded-lg transition-all">
-                    <span class="font-semibold text-hitam">Kelola Akun</span>
+        <!-- In Progress Reports Card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Laporan Diproses</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">0</p>
+                </div>
+                <div class="p-3 rounded-full bg-orange-50 text-orange-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rejected Reports Card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Laporan Ditolak</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">0</p>
+                </div>
+                <div class="p-3 rounded-full bg-red-50 text-red-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Reports Card -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Laporan Selesai</p>
+                    <p class="text-2xl font-bold text-gray-800 mt-1">0</p>
+                </div>
+                <div class="p-3 rounded-full bg-green-50 text-green-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Account Management Card -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800">Manajemen Akun</h2>
+            </div>
+            <div class="divide-y divide-gray-100">
+                <a href="{{ route('admin.akun') }}" class="block p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="p-2 rounded-lg bg-yellow-100 text-yellow-600 mr-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium text-gray-700">Kelola Akun</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
                 </a>
-                <a href="{{ route('admin.akun.pusat') }}" class="block p-4 bg-kuning hover:bg-opacity-90 rounded-lg transition-all">
-                    <span class="font-semibold text-hitam">Buat Akun Pemerintah Pusat</span>
+                <a href="{{ route('admin.akun.pusat') }}" class="block p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="p-2 rounded-lg bg-blue-100 text-blue-600 mr-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium text-gray-700">Buat Akun Pemerintah Pusat</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
                 </a>
-                <a href="{{ route('admin.akun.dinas') }}" class="block p-4 bg-kuning hover:bg-opacity-90 rounded-lg transition-all">
-                    <span class="font-semibold text-hitam">Buat Akun Dinas</span>
+                <a href="{{ route('admin.akun.dinas') }}" class="block p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="p-2 rounded-lg bg-green-100 text-green-600 mr-4">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium text-gray-700">Buat Akun Dinas</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
                 </a>
             </div>
         </div>
 
-        <!-- Notifikasi -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold text-hitam mb-4">Notifikasi</h2>
-            <div class="space-y-4">
-                <a href="{{ route('admin.notifikasi') }}" class="block p-4 bg-kuning hover:bg-opacity-90 rounded-lg transition-all">
-                    <span class="font-semibold text-hitam">Lihat Semua Notifikasi</span>
-                </a>
-            </div>
-        </div>
+        <!-- Table Container -->
+        <div class="w-full overflow-x-auto bg-white p-4 rounded-lg shadow-sm">
+                    <div class="min-w-full overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="py-4 px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
+                                    <th class="py-4 px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Kecamatan</th>
+                                    <th class="py-4 px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jenis</th>
+                                    <th class="py-4 px-6 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Persentase</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">1</td>
+                                    <td class="py-4 px-6 font-medium text-gray-900">Ampelgading</td>
+                                    <td class="py-4 px-6 text-gray-600">Batu</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex-1 bg-gray-200 rounded-full h-2.5 max-w-xs">
+                                                <div class="bg-yellow-500 h-2.5 rounded-full transition-all duration-500"
+                                                     style="width: 75%"></div>
+                                            </div>
+                                            <span class="text-sm font-semibold text-gray-700">75%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
     </div>
 </div>
 

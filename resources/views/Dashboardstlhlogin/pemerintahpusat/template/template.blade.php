@@ -43,29 +43,53 @@
                     </button>
 
                     <!-- Navigation Menu -->
-                    {{-- Pastikan nav-menu juga memiliki z-index saat tampil di mobile --}}
-                    <nav id="nav-menu" class="hidden absolute lg:static top-0 left-0 right-0 lg:block mt-16 lg:mt-0 py-5 lg:py-0 bg-white lg:bg-transparent shadow-lg lg:shadow-none rounded-lg lg:rounded-none w-full lg:w-auto z-40"> {{-- Tambahkan z-index lebih rendah dari hamburger --}}
+                    <nav id="nav-menu" class="hidden absolute lg:static top-0 left-0 right-0 lg:block mt-16 lg:mt-0 py-5 lg:py-0 bg-white lg:bg-transparent shadow-lg lg:shadow-none rounded-lg lg:rounded-none w-full lg:w-auto z-40">
                         <ul class="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0">
                             <!-- Main Menu Group -->
                             <div class="flex flex-col lg:flex-row w-full lg:w-auto space-y-4 lg:space-y-0 lg:space-x-7 px-8 lg:px-0">
                                 <li class="w-full lg:w-auto">
-                                    <a href="{{ route('pemerintahpusat.dashboard') }}" class="block text-[18px] font-bold py-2 relative
-            {{ request()->routeIs('pemerintahpusat.dashboard') ? 'text-hitam after:content-[\"\"] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-kuning' : 'text-hitam/70 hover:text-hitam' }}">
+                                    <a href="/pemerintahpusat/dashboard" class="block text-[18px] font-bold py-2 relative
+            {{ request()->routeIs('pemerintahpusat.dashboard') ? 'text-hitam after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-kuning' : 'text-hitam/70 hover:text-hitam' }}">
                                         Beranda
                                     </a>
                                 </li>
                                 <li class="w-full lg:w-auto">
-                                    <a href="{{ route('pemerintahpusat.laporan') }}" class="block text-[18px] font-bold py-2 relative
-            {{ request()->routeIs('pemerintahpusat.laporan') ? 'text-hitam after:content-[\"\"] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-kuning' : 'text-hitam/70 hover:text-hitam' }}">
+                                    <a href="/pemerintahpusat/laporan" class="block text-[18px] font-bold py-2 relative
+            {{ request()->routeIs('pemerintahpusat.laporan') ? 'text-hitam after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-kuning' : 'text-hitam/70 hover:text-hitam' }}">
                                         Laporan Daerah
                                     </a>
+                                </li>
+                                <!-- Mobile Only: Notifikasi -->
+                                <li class="w-full lg:hidden">
+                                    <a href="/pemerintahpusat/notifikasi" class="flex items-center text-[18px] font-bold py-2 text-hitam/70 hover:text-hitam">
+                                        <span class="mr-2">Notifikasi</span>
+                                        @if(isset($unreadNotifCount) && $unreadNotifCount > 0)
+                                            <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                                                {{ $unreadNotifCount }}
+                                            </span>
+                                        @endif
+                                    </a>
+                                </li>
+                                <!-- Mobile Only: Profil -->
+                                <li class="w-full lg:hidden">
+                                    <form action="{{ route('logout') }}" method="POST" class="w-full">
+                                        @csrf
+                                        <button type="submit" class="flex items-center w-full text-[18px] font-bold py-2 text-red-500 hover:text-red-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            Keluar
+                                        </button>
+                                    </form>
+                                </li>
                             </div>
                         </ul>
                     </nav>
 
-                    <div class="flex items-center space-x-4 relative">
+                    <!-- Desktop Only: Notifikasi dan Profil -->
+                    <div class="hidden lg:flex items-center space-x-4 relative">
                         <a href="/pemerintahpusat/notifikasi" class="relative text-gray-600 hover:text-gray-900">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 lg:h-7 lg:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
                             @if(isset($unreadNotifCount) && $unreadNotifCount > 0)
@@ -74,30 +98,26 @@
                                 </span>
                             @endif
                         </a>
-                    </div>
 
-                    <div class="flex items-center space-x-4 relative">
-                        <!-- Profile Dropdown -->
                         <div class="relative">
                             <div class="profile-button flex items-center focus:outline-none cursor-pointer" onclick="toggleDropdown()">
                                 <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                                   <img src="{{ asset('img/logo/pusat.png') }}" alt="Profil Lapor.Pal" class="w-full h-full object-cover" />
+                                    <img src="{{ asset('img/logo/pusat.png') }}" alt="Profil Lapor.Pal" class="w-full h-full object-cover" />
                                 </div>
                             </div>
-                            <!-- Dropdown Menu  -->
                             <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                                 <form action="{{ route('logout') }}" method="POST" class="w-full">
                                     @csrf
                                     <button type="submit" class="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                    Keluar
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        Keluar
                                     </button>
                                 </form>
                             </div>
                         </div>
-                    </div>      
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,12 +136,12 @@
     </button>
 
     <footer class="w-full">
-        <!-- Gambar di atas teks -->
-        <img src="{{ asset('img/logo/Footer.png') }}" alt="Logo Lapor.Pal!" class="mx-auto mb-4" width="1441.44" height="387.79">
-        <!-- Background kuning memenuhi seluruh lebar layar -->
+        <!-- Gambar ilustrasi kota Malang -->
+        <img src="{{ asset('img/logo/Footer.png') }}" alt="Ilustrasi Kota Malang" class="w-full h-auto" style="max-height: 250px; object-fit: cover;">
+
+        <!-- Background kuning dengan copyright text -->
         <div class="w-full bg-kuning text-center py-4">
-            <!-- Teks di bawah gambar -->
-            <p class="text-hitam text-[18px] font-bold">&copy; 2025 Pemerintah Kota Malang - All Rights Reserved.</p>
+            <p class="text-hitam font-semibold text-[13px]">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
         </div>
     </footer>
 
