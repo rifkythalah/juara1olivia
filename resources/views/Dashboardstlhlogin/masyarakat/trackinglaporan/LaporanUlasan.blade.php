@@ -94,22 +94,26 @@
 
      <!-- Comment Section -->
      <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 border border-gray-400">
-        <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
-            @foreach($komentar as $k)
-                <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
-                    @if($k->user_id != auth()->user()->id)
-                        <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
-                    @endif
-                    <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                        <p class="text-sm text-gray-800">{{ $k->isi_komentar }}</p>
-                        <span class="text-xs text-gray-400">{{ $k->user->username ?? 'User' }} - {{ $k->created_at->diffForHumans() }}</span>
+        @if($komentar->isEmpty())
+            <p class="text-center text-gray-500">Belum ada komentar untuk laporan ini.</p>
+        @else
+            <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
+                @foreach($komentar as $k)
+                    <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
+                        @if($k->user_id != auth()->user()->id)
+                            <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                        @endif
+                        <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
+                            <p class="text-sm text-gray-800">{{ $k->isi_komentar }}</p>
+                            <span class="text-xs text-gray-400">{{ $k->user->username ?? 'User' }} - {{ $k->created_at->diffForHumans() }}</span>
+                        </div>
+                        @if($k->user_id == auth()->user()->id)
+                            <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                        @endif
                     </div>
-                    @if($k->user_id == auth()->user()->id)
-                        <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
-                    @endif
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+        @endif
    </div>
 </div>
 

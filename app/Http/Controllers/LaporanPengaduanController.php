@@ -380,8 +380,9 @@ class LaporanPengaduanController extends Controller
     {
         $laporan = LaporanPengaduan::with('tracking')->findOrFail($id);
         $penyelesaian = PenyelesaianLaporan::where('pengaduan_id', $laporan->id)->first();
-
-        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep4Lanjutan', compact('laporan', 'penyelesaian'));
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep4Lanjutan', compact('laporan', 'penyelesaian', 'komentar', 'likeCount'));
     }
 
     public function hasilFoto($id)
@@ -394,7 +395,9 @@ class LaporanPengaduanController extends Controller
     {
         $laporan = \App\Models\LaporanPengaduan::with('tracking')->findOrFail($id);
         $penyelesaian = \App\Models\PenyelesaianLaporan::where('pengaduan_id', $id)->first();
-        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep7Lanjutan', compact('laporan', 'penyelesaian'));
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep7Lanjutan', compact('laporan', 'penyelesaian', 'komentar', 'likeCount'));
     }
 
     public function step7Validasi($id)
@@ -518,8 +521,10 @@ class LaporanPengaduanController extends Controller
 
     public function step4Diproses($id)
     {
-        $laporan = \App\Models\LaporanPengaduan::with('tracking')->findOrFail($id);
-        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep4Diproses', compact('laporan'));
+        $laporan = \App\Models\LaporanPengaduan::with(['tracking'])->findOrFail($id);
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep4Diproses', compact('laporan', 'komentar', 'likeCount'));
     }
 
     public function adminVerifikasiLaporan(Request $request, $id)
@@ -580,29 +585,10 @@ class LaporanPengaduanController extends Controller
 
     public function adminDetailLaporan($id)
     {
-        $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
-
-        // Default: data dari laporan itu sendiri
-        $penyelesaian = $laporan->penyelesaian;
-        $foto_video = $laporan->foto_video;
-        $trackingUtama = $laporan->tracking;
-
-        // Jika laporan anak, ambil data utama
-        if ($laporan->related_pengaduan_id) {
-            $laporanUtama = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->find($laporan->related_pengaduan_id);
-            if ($laporanUtama) {
-                $penyelesaian = $laporanUtama->penyelesaian;
-                $foto_video = $laporanUtama->foto_video;
-                $trackingUtama = $laporanUtama->tracking;
-            }
-        }
-
-        return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporan', [
-            'laporan' => $laporan,
-            'penyelesaian' => $penyelesaian,
-            'foto_video' => $foto_video,
-            'trackingUtama' => $trackingUtama
-        ]);
+        $laporan = \App\Models\LaporanPengaduan::with(['penyelesaian', 'tracking'])->findOrFail($id);
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporan', compact('laporan', 'komentar', 'likeCount'));
     }
 
     public function indexLaporanAdmin(Request $request)
@@ -653,58 +639,47 @@ class LaporanPengaduanController extends Controller
     public function adminDetailLaporanSelesai($id)
     {
         $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian', 'ulasan'])->findOrFail($id);
-
-        // Default: data dari laporan itu sendiri
         $penyelesaian = $laporan->penyelesaian;
         $foto_video = $laporan->foto_video;
         $trackingUtama = $laporan->tracking;
-        $ulasan = $laporan->ulasan; // ulasan selalu dari laporan ini
-
-        // Jika laporan anak, ambil data utama untuk penyelesaian, foto, trackingUtama
+        $ulasan = $laporan->ulasan;
         if ($laporan->related_pengaduan_id) {
             $laporanUtama = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->find($laporan->related_pengaduan_id);
             if ($laporanUtama) {
                 $penyelesaian = $laporanUtama->penyelesaian;
                 $foto_video = $laporanUtama->foto_video;
                 $trackingUtama = $laporanUtama->tracking;
-                // $ulasan tetap dari $laporan (anak)
             }
         }
-
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
         return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporanSelesai', [
             'laporan' => $laporan,
             'penyelesaian' => $penyelesaian,
             'foto_video' => $foto_video,
             'trackingUtama' => $trackingUtama,
-            'ulasan' => $ulasan
+            'ulasan' => $ulasan,
+            'komentar' => $komentar,
+            'likeCount' => $likeCount
         ]);
     }
 
     public function dinasDetailLaporanSelesai($id)
     {
         $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian', 'ulasan'])->findOrFail($id);
-
-        // Default: data dari laporan itu sendiri
         $penyelesaian = $laporan->penyelesaian;
         $tracking = $laporan->tracking;
-        $ulasan = $laporan->ulasan; // ulasan selalu dari laporan ini
-
-        // Jika laporan anak, ambil penyelesaian & tracking dari utama, ulasan tetap dari anak
+        $ulasan = $laporan->ulasan;
         if ($laporan->related_pengaduan_id) {
             $laporanUtama = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->find($laporan->related_pengaduan_id);
             if ($laporanUtama) {
                 $penyelesaian = $laporanUtama->penyelesaian;
                 $tracking = $laporanUtama->tracking;
-                // $ulasan tetap dari $laporan (anak)
             }
         }
-
-        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep8Selesai', [
-            'laporan' => $laporan,
-            'penyelesaian' => $penyelesaian,
-            'tracking' => $tracking,
-            'ulasan' => $ulasan
-        ]);
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep8Selesai', compact('laporan', 'penyelesaian', 'tracking', 'ulasan', 'komentar', 'likeCount'));
     }
 
     public function kirimUlasan(Request $request, $id)
@@ -1024,13 +999,14 @@ class LaporanPengaduanController extends Controller
         $waktu_tolak = $notifikasi->waktu_tolak ?? $laporan->updated_at;
         $penyelesaian = $laporan->penyelesaian;
         $tracking = $laporan->tracking;
-        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep9Ditolak', compact('laporan', 'alasan_penolakan', 'waktu_tolak', 'notifikasi', 'penyelesaian', 'tracking'));
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep9Ditolak', compact('laporan', 'alasan_penolakan', 'waktu_tolak', 'notifikasi', 'penyelesaian', 'tracking', 'komentar', 'likeCount'));
     }
 
     public function adminDetailLaporanDitolak($id)
     {
         $laporan = \App\Models\LaporanPengaduan::with(['penyelesaian', 'tracking'])->findOrFail($id);
-        // Ambil notifikasi penolakan terbaru untuk laporan ini
         $notifikasi = \App\Models\Notifikasi::where('pengaduan_id', $id)
             ->where('role_tujuan', 'dinas')
             ->orderBy('waktu_tolak', 'desc')
@@ -1039,7 +1015,9 @@ class LaporanPengaduanController extends Controller
         $waktu_tolak = $notifikasi->waktu_tolak ?? $laporan->updated_at;
         $penyelesaian = $laporan->penyelesaian;
         $tracking = $laporan->tracking;
-        return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporanDitolak', compact('laporan', 'alasan_penolakan', 'waktu_tolak', 'penyelesaian', 'notifikasi', 'tracking'));
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporanDitolak', compact('laporan', 'alasan_penolakan', 'waktu_tolak', 'penyelesaian', 'notifikasi', 'tracking', 'komentar', 'likeCount'));
     }
 
     public function escalateUnfinishedLaporan()
@@ -1313,19 +1291,10 @@ class LaporanPengaduanController extends Controller
 
     public function laporanBelumTerselesaikan($id)
     {
-        $laporan = \App\Models\LaporanPengaduan::with(['tracking', 'penyelesaian'])->findOrFail($id);
-        $penyelesaian = $laporan->penyelesaian;
-
-        // Cek apakah sudah ada pesan dari pusat ke dinas untuk laporan ini
-        $pesan = Notifikasi::where('pengaduan_id', $id)
-            ->where('jenis_notifikasi', 'PesanPusat')
-            ->first();
-        if ($pesan) {
-            // Sudah pernah kirim pesan, redirect ke halaman pesan
-            return redirect()->route('pemerintahpusat.laporan.pesanBelumTerselesaikan', $id);
-        }
-        // Belum pernah kirim pesan, tampilkan form kirim pesan
-        return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan', compact('laporan', 'penyelesaian'));
+        $laporan = \App\Models\LaporanPengaduan::findOrFail($id);
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan', compact('laporan', 'komentar', 'likeCount'));
     }
 
     public function laporanSayaMasyarakat()

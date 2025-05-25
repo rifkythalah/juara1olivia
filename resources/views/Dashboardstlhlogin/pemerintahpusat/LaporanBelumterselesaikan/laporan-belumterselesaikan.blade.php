@@ -98,17 +98,37 @@
                     </div>
                                        <!-- Like and Comment Count Section -->
     <div class="max-w-4xl mx-auto px-4 mb-4 flex items-center space-x-4 my-8">
-        <button class="flex items-center space-x-1 text-gray-600 hover:text-blue-500">
+        <span class="flex items-center space-x-1 text-gray-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
             </svg>
-            <span>7</span>
-        </button>
-        <div class="flex items-center space-x-1 text-gray-600">
+            <span>{{ $likeCount }}</span>
+        </span>
+        <span class="flex items-center space-x-1 text-gray-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span>2</span>
+            <span>{{ $komentar->count() }}</span>
+        </span>
+    </div>
+    <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 border border-gray-400">
+        <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
+            @forelse($komentar as $k)
+                <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
+                    @if($k->user_id != auth()->user()->id)
+                        <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                    @endif
+                    <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
+                        <p class="text-sm text-gray-800">{{ $k->isi_komentar }}</p>
+                        <span class="text-xs text-gray-400">{{ $k->user->username ?? 'User' }} - {{ $k->created_at->diffForHumans() }}</span>
+                    </div>
+                    @if($k->user_id == auth()->user()->id)
+                        <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                    @endif
+                </div>
+            @empty
+                <p class="text-center text-gray-500">Belum ada komentar untuk laporan ini.</p>
+            @endforelse
         </div>
     </div>
                      <!-- Komentar dipindahkan ke bawah Selesaikan Laporan -->
