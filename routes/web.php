@@ -444,3 +444,15 @@ Route::get('/pemerintahpusat/laporan/belum-terselesaikan/pesan/{id}', [LaporanPe
 Route::get('/dinas/laporan/pesan-tidak-terselesaikan/{id}', [LaporanPengaduanController::class, 'pesanTidakTerselesaikanDinas'])->name('dinas.laporan.pesanTidakTerselesaikan');
 
 Route::get('/debug-escalate', [\App\Http\Controllers\LaporanPengaduanController::class, 'escalateUnfinishedLaporan']);
+
+// API untuk marker dinas
+Route::get('/api/marker-dinas', function() {
+    $dinas = \App\Models\Dinas::first();
+    return response()->json($dinas);
+});
+
+// API untuk marker pusat
+Route::get('/api/marker-pusat', function() {
+    $pusat = \App\Models\PemerintahPusatDinas::first();
+    return response()->json($pusat);
+});

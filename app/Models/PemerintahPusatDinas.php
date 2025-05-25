@@ -10,7 +10,9 @@ class PemerintahPusatDinas extends Model
     
     protected $fillable = [
         'user_id',
-        'dinas_id'
+        'dinas_id',
+        'latitude',
+        'longitude'
     ];
 
     public function user()

@@ -29,6 +29,8 @@ class PusatController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'confirmed', Password::defaults()],
                 'nomor_telepon' => ['required', 'string', 'max:15'],
+                'latitude' => ['nullable', 'numeric'],
+                'longitude' => ['nullable', 'numeric'],
                 'dinas' => ['required', 'array', 'min:1'],
                 'dinas.*' => ['exists:dinas,id'],
                 'nik' => ['nullable', 'prohibited']
@@ -59,12 +61,14 @@ class PusatController extends Controller
                     'username' => $request->username,
                     'nomor_telepon' => $request->nomor_telepon,
                     'email' => $request->email,
-                    'wilayah' => $dinas->wilayah
+                    'wilayah' => $dinas->wilayah,
+                    'latitude' => $request->latitude,
+                    'longitude' => $request->longitude
                 ];
             }
 
             // Attach selected dinas with additional data
-            $user->dinas()->attach($pivotData);
+            $user->dinasPusat()->attach($pivotData);
 
             Log::info('Dinas attached', ['dinas_ids' => $request->dinas]);
 

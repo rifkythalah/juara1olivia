@@ -43,7 +43,6 @@ class DinasController extends Controller
             'wilayah' => 'required|string|max:100',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'polygon_wilayah' => 'nullable|file|mimes:json,geojson|max:10240', // max 10MB
             'nik' => 'nullable|prohibited' // memastikan NIK tidak diisi
         ]);
 
@@ -77,57 +76,6 @@ class DinasController extends Controller
                 'nik' => null // Memastikan NIK null
             ]);
 
-            // Handle GeoJSON file if uploaded
-            $polygonPath = null;
-            if ($request->hasFile('polygon_wilayah')) {
-                try {
-                    $file = $request->file('polygon_wilayah');
-
-                    // Validate file content
-                    $content = file_get_contents($file->getRealPath());
-                    $json = json_decode($content);
-
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        throw new \Exception('Invalid JSON file: ' . json_last_error_msg());
-                    }
-
-                    // Create directory if it doesn't exist
-                    $directory = 'public/geojson';
-                    if (!Storage::exists($directory)) {
-                        Storage::makeDirectory($directory);
-                    }
-
-                    // Generate unique filename
-                    $fileName = time() . '_' . $file->getClientOriginalName();
-                    $filePath = $directory . '/' . $fileName;
-
-                    // Store the file
-                    if (!Storage::putFileAs($directory, $file, $fileName)) {
-                        throw new \Exception('Failed to store file');
-                    }
-
-                    $polygonPath = 'geojson/' . $fileName;
-
-                    Log::info('File uploaded successfully:', [
-                        'path' => $polygonPath,
-                        'size' => $file->getSize(),
-                        'mime' => $file->getMimeType()
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error('File upload failed:', [
-                        'error' => $e->getMessage(),
-                        'file' => $file->getClientOriginalName()
-                    ]);
-
-                    // Delete the user if file upload fails
-                    $user->delete();
-
-                    return response()->json([
-                        'message' => 'File upload failed: ' . $e->getMessage()
-                    ], 422);
-                }
-            }
-
             // Create dinas record
             $dinas = Dinas::create([
                 'user_id' => $user->id,
@@ -135,7 +83,6 @@ class DinasController extends Controller
                 'wilayah' => $request->wilayah,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'polygon_wilayah' => $polygonPath,
                 'grade' => 'A', // Default grade
                 'point' => 0 // Default point
             ]);

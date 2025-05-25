@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('wilayah', 100);
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
-            $table->json('polygon_wilayah')->nullable();
             $table->enum('grade', ['A', 'B', 'C', 'D', 'E']);
             $table->integer('point')->default(0);
             $table->timestamps();

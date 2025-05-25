@@ -85,13 +85,6 @@
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
                         </div>
 
-                        <!-- GeoJSON File -->
-                        <div class="space-y-2">
-                            <label for="polygon_wilayah" class="block text-hitam font-medium">File GeoJSON Wilayah</label>
-                            <input type="file" id="polygon_wilayah" name="polygon_wilayah" accept=".json,.geojson"
-                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
-                        </div>
-
                         <!-- Hidden fields for grade and point -->
                         <input type="hidden" name="grade" value="A">
                         <input type="hidden" name="point" value="0">

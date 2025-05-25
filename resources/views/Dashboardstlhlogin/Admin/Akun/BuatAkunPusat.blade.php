@@ -96,6 +96,26 @@
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+                        <!-- Latitude -->
+                        <div>
+                            <label for="latitude" class="block text-hitam font-medium mb-2">Latitude</label>
+                            <input type="number" step="any" id="latitude" name="latitude" placeholder="Latitude"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('latitude') border-red-500 @enderror"
+                                value="{{ old('latitude') }}">
+                            @error('latitude')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <!-- Longitude -->
+                        <div>
+                            <label for="longitude" class="block text-hitam font-medium mb-2">Longitude</label>
+                            <input type="number" step="any" id="longitude" name="longitude" placeholder="Longitude"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('longitude') border-red-500 @enderror"
+                                value="{{ old('longitude') }}">
+                            @error('longitude')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 

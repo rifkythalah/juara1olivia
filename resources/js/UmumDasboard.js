@@ -152,6 +152,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             })
             .catch((error) => console.error("Error loading markers:", error));
+
+        // Setelah marker laporan ditambahkan, tambahkan marker dinas
+        fetch('/api/marker-dinas')
+            .then(response => response.json())
+            .then(dinas => {
+                if (dinas && dinas.latitude && dinas.longitude) {
+                    var dinasIcon = L.icon({
+                        iconUrl: '/img/icon/dinas.svg',
+                        iconSize: [32, 48],
+                        iconAnchor: [16, 48],
+                        popupAnchor: [0, -48]
+                    });
+                    var dinasPopup = `<b>DINAS</b><br>Latitude: ${dinas.latitude}<br>Longitude: ${dinas.longitude}`;
+                    L.marker([dinas.latitude, dinas.longitude], { icon: dinasIcon })
+                        .addTo(map)
+                        .bindPopup(dinasPopup);
+                }
+            });
+        // Tambahkan marker pusat
+        fetch('/api/marker-pusat')
+            .then(response => response.json())
+            .then(pusat => {
+                if (pusat && pusat.latitude && pusat.longitude) {
+                    var pusatIcon = L.icon({
+                        iconUrl: '/img/icon/pemkot.svg',
+                        iconSize: [32, 48],
+                        iconAnchor: [16, 48],
+                        popupAnchor: [0, -48]
+                    });
+                    var pusatPopup = `<b>PEMERINTAH PUSAT</b><br>Latitude: ${pusat.latitude}<br>Longitude: ${pusat.longitude}`;
+                    L.marker([pusat.latitude, pusat.longitude], { icon: pusatIcon })
+                        .addTo(map)
+                        .bindPopup(pusatPopup);
+                }
+            });
     }
 
     // Swiper Initialization
