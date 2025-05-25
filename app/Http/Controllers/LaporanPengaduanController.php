@@ -752,7 +752,9 @@ class LaporanPengaduanController extends Controller
         $ulasan = $laporan->ulasan;
         $penyelesaian = $laporan->penyelesaian;
         $tracking = $laporan->tracking;
-
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
+        $liked = \App\Models\LikeLaporan::where('pengaduan_id', $id)->where('user_id', auth()->user()->id)->exists();
         // Jika laporan anak, ambil penyelesaian & tracking dari utama
         if ($laporan->related_pengaduan_id) {
             $laporanUtama = \App\Models\LaporanPengaduan::with(['penyelesaian', 'tracking'])->find($laporan->related_pengaduan_id);
@@ -761,7 +763,7 @@ class LaporanPengaduanController extends Controller
                 $tracking = $laporanUtama->tracking;
             }
         }
-        return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanUlasan', compact('laporan', 'ulasan', 'penyelesaian', 'tracking'));
+        return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanUlasan', compact('laporan', 'ulasan', 'penyelesaian', 'tracking', 'komentar', 'likeCount', 'liked'));
     }
 
     public function tolakLaporan(Request $request, $id)

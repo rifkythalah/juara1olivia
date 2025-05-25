@@ -51,14 +51,14 @@
                         @foreach($komentar as $k)
                             <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
                                 @if($k->user_id != auth()->user()->id)
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
+                                    <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
                                 @endif
                                 <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
                                     <p class="text-sm text-gray-800">{{ $k->isi_komentar }}</p>
                                     <span class="text-xs text-gray-400">{{ $k->user->username ?? 'User' }} - {{ $k->created_at->diffForHumans() }}</span>
                                 </div>
                                 @if($k->user_id == auth()->user()->id)
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
+                                    <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
                                 @endif
                             </div>
                         @endforeach
@@ -66,7 +66,7 @@
                     {{-- Input comment area --}}
                     <form action="{{ route('masyarakat.laporan.komentar', $laporan->id) }}" method="POST" class="flex items-center space-x-3 border-t border-black pt-4">
                         @csrf
-                        <img src="{{ asset('img/logo/profil.png') }}" alt="Your Avatar" class="w-10 h-10 rounded-full">
+                        <img src="{{ (auth()->user()->masyarakat && auth()->user()->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode(auth()->user()->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
                         <input type="text" name="isi_komentar" placeholder="Tulis komentar..." class="flex-grow p-3 border border-black rounded-full focus:outline-none" required>
                         <button type="submit" class="text-gray-600 p-2">
                             <img src="{{ asset('img/icon/kirim.svg') }}" alt="Kirim" class="w-10 h-5">
