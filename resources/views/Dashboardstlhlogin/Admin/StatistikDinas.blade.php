@@ -1,6 +1,5 @@
-@extends('Dashboardstlhlogin.pemerintahpusat.template.template')
-@section('title', 'pusat')
-
+@extends('Dashboardstlhlogin.Admin.Template.Template')
+@section('title', 'Dashboard Admin - LAPOR PAL')
 @section('content')
 
 

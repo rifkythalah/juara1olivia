@@ -230,6 +230,14 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/admin/laporan/verifikasi/{id}', [LaporanPengaduanController::class, 'adminVerifikasiLaporan'])->name('admin.laporan.verifikasi');
         Route::post('/admin/laporan/{id}/tolak', [LaporanPengaduanController::class, 'adminTolakLaporan'])->name('admin.laporan.tolak');
+
+        Route::get('/admin/statistikDinas', function () {
+            $dinasList = \App\Models\Dinas::all();
+            $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
+            $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
+            $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
+            return view('Dashboardstlhlogin.Admin.StatistikDinas', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+        })->name('admin.statistikDinas');
     });
 
     // Dinas Routes
@@ -339,8 +347,16 @@ Route::middleware('auth')->group(function () {
     // Pemerintah Pusat Routes
     Route::middleware(['auth', 'role:pemerintahpusat'])->group(function () {
         Route::get('/pemerintahpusat/dashboard', function () {
-            return view('Dashboardstlhlogin.pemerintahpusat.beranda-pusat');
+            $dinasList = \App\Models\Dinas::all();
+            $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
+            $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
+            $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
+            return view('Dashboardstlhlogin.pemerintahpusat.beranda-pusat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
         })->name('pemerintahpusat.dashboard');
+
+        Route::get('/pemerintahpusat/statistikDinas', function () {
+            return view('Dashboardstlhlogin.pemerintahpusat.StatistikDinas.statistikDinas');
+        })->name('pemerintahpusat.statistikDinas');
 
         Route::get('/pemerintahpusat/laporan', function () {
             return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat');
