@@ -15,6 +15,8 @@ use App\Models\UlasanLaporan;
 use App\Models\Notifikasi;
 use App\Models\PemerintahPusatDinas;
 use App\Models\PesanPusatKeDinas;
+use App\Models\KomentarLaporan;
+use App\Models\LikeLaporan;
 
 class LaporanPengaduanController extends Controller
 {
@@ -454,13 +456,19 @@ class LaporanPengaduanController extends Controller
     public function showTrackingProsesDitindaklanjuti($id)
     {
         $laporan = LaporanPengaduan::with('tracking')->findOrFail($id);
-        return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanProses-ditindaklanjuti', compact('laporan'));
+        $komentar = KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = LikeLaporan::where('pengaduan_id', $id)->count();
+        $liked = LikeLaporan::where('pengaduan_id', $id)->where('user_id', auth()->user()->id)->exists();
+        return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanProses-ditindaklanjuti', compact('laporan', 'komentar', 'likeCount', 'liked'));
     }
 
     public function showTrackingProsesDiselesaikan($id)
     {
         $laporan = LaporanPengaduan::with('tracking')->findOrFail($id);
-        return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanProses-diselesaikan', compact('laporan'));
+        $komentar = KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
+        $likeCount = LikeLaporan::where('pengaduan_id', $id)->count();
+        $liked = LikeLaporan::where('pengaduan_id', $id)->where('user_id', auth()->user()->id)->exists();
+        return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanProses-diselesaikan', compact('laporan', 'komentar', 'likeCount', 'liked'));
     }
 
     public function showTrackingSelesai($id)
@@ -1370,5 +1378,31 @@ class LaporanPengaduanController extends Controller
         } else {
             return view('DasboardBelumLogin.Aktivitas.StatistikPemerintah', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
         }
+    }
+
+    public function storeKomentar(Request $request, $id)
+    {
+        $request->validate(['isi_komentar' => 'required|string|max:1000']);
+        KomentarLaporan::create([
+            'pengaduan_id' => $id,
+            'user_id' => auth()->user()->id,
+            'isi_komentar' => $request->isi_komentar,
+        ]);
+        return back();
+    }
+
+    public function storeLike(Request $request, $id)
+    {
+        $userId = auth()->user()->id;
+        $like = LikeLaporan::where('pengaduan_id', $id)->where('user_id', $userId)->first();
+        if ($like) {
+            $like->delete(); // Unlike
+        } else {
+            LikeLaporan::create([
+                'pengaduan_id' => $id,
+                'user_id' => $userId,
+            ]);
+        }
+        return back();
     }
 }

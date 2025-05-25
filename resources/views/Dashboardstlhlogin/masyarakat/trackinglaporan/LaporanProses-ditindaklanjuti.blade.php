@@ -26,17 +26,20 @@
 
     <div class="justify-start">                          <!-- Like and Comment Count Section -->
     <div class="max-w-4xl mx-auto  mb-4 flex items-center space-x-4">
-        <button class="flex items-center space-x-1 text-gray-600 hover:text-blue-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-            </svg>
-            <span>7</span>
-        </button>
+        <form action="{{ route('masyarakat.laporan.like', $laporan->id) }}" method="POST" class="inline">
+            @csrf
+            <button type="submit" class="flex items-center space-x-1 text-gray-600 hover:text-blue-500 {{ $liked ? 'text-blue-600' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                </svg>
+                <span>{{ $likeCount }}</span>
+            </button>
+        </form>
         <div class="flex items-center space-x-1 text-gray-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span>2</span>
+            <span>{{ $komentar->count() }}</span>
         </div>
     </div>
 </div>
@@ -45,64 +48,30 @@
                     {{-- Area untuk menampilkan komentar dengan scroll --}}
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Komentar</h3>
                     <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
-
-                        <!-- Comment Example 1 (User) -->
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">...Trimakasih sudah melakukan pelaporan</p>
+                        @foreach($komentar as $k)
+                            <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
+                                @if($k->user_id != auth()->user()->id)
+                                    <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
+                                @endif
+                                <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
+                                    <p class="text-sm text-gray-800">{{ $k->isi_komentar }}</p>
+                                    <span class="text-xs text-gray-400">{{ $k->user->username ?? 'User' }} - {{ $k->created_at->diffForHumans() }}</span>
+                                </div>
+                                @if($k->user_id == auth()->user()->id)
+                                    <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
+                                @endif
                             </div>
-                        </div>
-
-                        <!-- Comment Example 2 (Another User/Admin) -->
-                        <div class="flex items-start justify-end space-x-3">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Iyaa</p>
-                            </div>
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="Admin Avatar" class="w-10 h-10 rounded-full">
-                        </div>
-
-                        {{-- Test scroll comments --}}
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Semoga cepat ditangani ya.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start justify-end space-x-3">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Siap, sedang kami proses.</p>
-                            </div>
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="Admin Avatar" class="w-10 h-10 rounded-full">
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Terima kasih informasinya.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Terima kasih informasinya.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Terima kasih informasinya.</p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
-
                     {{-- Input comment area --}}
-                    <div class="flex items-center space-x-3 border-t border-black pt-4">
+                    <form action="{{ route('masyarakat.laporan.komentar', $laporan->id) }}" method="POST" class="flex items-center space-x-3 border-t border-black pt-4">
+                        @csrf
                         <img src="{{ asset('img/logo/profil.png') }}" alt="Your Avatar" class="w-10 h-10 rounded-full">
-                        <input type="text" placeholder="Tulis komentar..." class="flex-grow p-3 border border-black rounded-full focus:outline-none">
-                        <button class="text-gray-600 p-2">
+                        <input type="text" name="isi_komentar" placeholder="Tulis komentar..." class="flex-grow p-3 border border-black rounded-full focus:outline-none" required>
+                        <button type="submit" class="text-gray-600 p-2">
                             <img src="{{ asset('img/icon/kirim.svg') }}" alt="Kirim" class="w-10 h-5">
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
 

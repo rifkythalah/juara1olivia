@@ -162,6 +162,10 @@ Route::middleware('auth')->group(function () {
         // Form kirim ulasan (POST)
         Route::post('/masyarakat/laporan/{id}/ulasan', [LaporanPengaduanController::class, 'kirimUlasan'])->name('masyarakat.laporan.kirimUlasan');
 
+        // Komentar dan Like
+        Route::post('/masyarakat/laporan/{id}/komentar', [LaporanPengaduanController::class, 'storeKomentar'])->name('masyarakat.laporan.komentar');
+        Route::post('/masyarakat/laporan/{id}/like', [LaporanPengaduanController::class, 'storeLike'])->name('masyarakat.laporan.like');
+
         // Lihat ulasan publik
         Route::get('/masyarakat/laporan/ulasan/{id}', [LaporanPengaduanController::class, 'lihatUlasan'])->name('masyarakat.laporan.ulasan');
 
