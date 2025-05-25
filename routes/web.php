@@ -149,10 +149,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/masyarakat/aktivitas/LaporanWarga', [LaporanPengaduanController::class, 'laporanWargaMasyarakat'])->name('masyarakat.laporan.warga');
 
-        Route::get('/masyarakat/aktivitas/LaporanAktif', function () {
-            return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.LaporanAktif');
-        })->name('masyarakat.aktivitas');
-
         Route::get('/masyarakat/aktivitas/StatistikDinas', [LaporanPengaduanController::class, 'statistikPemerintahMasyarakat'])->name('masyarakat.aktivitas.statistik');
 
         Route::get('/masyarakat/trackinglaporan/LaporanUlasan', function () {
@@ -299,10 +295,6 @@ Route::middleware('auth')->group(function () {
         })->name('dinas.laporan.step1');
 
         Route::get('/dinas/laporan/step2/ditolak/{id}', [LaporanPengaduanController::class, 'showStep2Ditolak'])->name('dinas.laporan.step2.ditolak');
-
-        Route::get('/dinas/laporan/step3/diproses', function () {
-            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep3Diproses');
-        })->name('dinas.laporan.step3.diproses');
 
         Route::get('/dinas/laporan/step4/diproses/{id}', [LaporanPengaduanController::class, 'step4Diproses'])
             ->name('dinas.laporan.step4.diproses');

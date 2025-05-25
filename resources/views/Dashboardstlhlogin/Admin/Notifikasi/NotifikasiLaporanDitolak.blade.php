@@ -21,7 +21,7 @@
             <div class="lg:col-span-7 space-y-6">
                <!-- Image Section -->
             <div class="lg:col-span-7">
-                <div class="border-4 border-kuning rounded-xl shadow-xl overflow-hidden">
+                <div class="border-4 border-red-500 rounded-xl shadow-xl overflow-hidden">
                     <img id="image-modal-trigger" src="{{ asset('storage/' . $laporan->foto_video) }}" alt="Foto Laporan" class="w-full h-96 md:h-[500px] object-cover rounded-xl transform hover:scale-105 transition duration-500 cursor-pointer">
                 </div>
             </div>
@@ -47,7 +47,7 @@
             <!-- Detail Section -->
             <div class="lg:col-span-5">
                 <div class="bg-white rounded-xl shadow-xl p-8 h-full">
-                  
+
 
                      <!-- Problem Section -->
                      <div class="mb-8 pb-6 border-b border-gray-200">
@@ -123,7 +123,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Status 2 - Next -->
                                 <div class="relative flex items-start group">
                                     <div class="absolute left-0 flex items-center justify-center transform -translate-x-1/2 -translate-y-3">
