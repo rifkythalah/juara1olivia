@@ -15,11 +15,10 @@
             <form id="formBuatAkun" action="{{ route('admin.akun.dinas.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Kolom Kiri -->
+                    <!-- Kolom Kiri: Informasi Dasar -->
                     <div class="space-y-6">
                         <div class="bg-gray-50 p-6 rounded-xl space-y-6">
                             <h3 class="text-xl font-semibold text-gray-800 mb-4">Informasi Dasar</h3>
-                            
                             <!-- Nama Dinas -->
                             <div class="space-y-2">
                                 <label for="name" class="block text-gray-700 font-medium">Nama Dinas</label>
@@ -33,7 +32,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Username -->
                             <div class="space-y-2">
                                 <label for="username" class="block text-gray-700 font-medium">Username</label>
@@ -47,7 +45,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Email -->
                             <div class="space-y-2">
                                 <label for="email" class="block text-gray-700 font-medium">Email</label>
@@ -62,46 +59,15 @@
                                 </div>
                                 <p class="text-sm text-gray-500">Gunakan email yang belum terdaftar</p>
                             </div>
-                        </div>
-
-                        <div class="bg-gray-50 p-6 rounded-xl space-y-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-4">Kontak & Keamanan</h3>
-                            
-                            <!-- Nomor Telepon -->
-                            <div class="space-y-2">
-                                <label for="nomor_telepon" class="block text-gray-700 font-medium">Nomor Telepon</label>
-                                <div class="relative">
-                                    <input type="tel" id="nomor_telepon" name="nomor_telepon" placeholder="081234567890" required
-                                        class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Password -->
-                            <div class="space-y-2">
-                                <label for="password" class="block text-gray-700 font-medium">Password</label>
-                                <div class="relative">
-                                    <input type="password" id="password" name="password" placeholder="********" required
-                                        class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300">
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Hidden fields -->
+                            <input type="hidden" name="grade" value="A">
+                            <input type="hidden" name="point" value="0">
                         </div>
                     </div>
-
-                    <!-- Kolom Kanan -->
+                    <!-- Kolom Kanan: Informasi Wilayah + Nomor Telepon -->
                     <div class="space-y-6">
                         <div class="bg-gray-50 p-6 rounded-xl space-y-6">
                             <h3 class="text-xl font-semibold text-gray-800 mb-4">Informasi Wilayah</h3>
-
                             <!-- Wilayah -->
                             <div class="space-y-2">
                                 <label for="wilayah" class="block text-gray-700 font-medium">Wilayah</label>
@@ -116,7 +82,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Koordinat Group -->
                             <div class="grid grid-cols-2 gap-4">
                                 <!-- Latitude -->
@@ -125,7 +90,6 @@
                                     <input type="number" step="any" id="latitude" name="latitude" placeholder="-6.200000" required
                                         class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300">
                                 </div>
-
                                 <!-- Longitude -->
                                 <div class="space-y-2">
                                     <label for="longitude" class="block text-gray-700 font-medium">Longitude</label>
@@ -133,45 +97,54 @@
                                         class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300">
                                 </div>
                             </div>
-
-                            <!-- GeoJSON File -->
+                            <!-- Nomor Telepon (pindah ke kanan) -->
                             <div class="space-y-2">
-                                <label for="polygon_wilayah" class="block text-gray-700 font-medium">File GeoJSON Wilayah</label>
+                                <label for="nomor_telepon" class="block text-gray-700 font-medium">Nomor Telepon</label>
                                 <div class="relative">
-                                    <input type="file" id="polygon_wilayah" name="polygon_wilayah" accept=".json,.geojson"
-                                        class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300"
-                                        style="color: transparent;">
+                                    <input type="tel" id="nomor_telepon" name="nomor_telepon" placeholder="081234567890" required
+                                        class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300">
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
                                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
                                     </div>
                                 </div>
-                                <p class="text-sm text-gray-500">Upload file GeoJSON untuk batas wilayah</p>
                             </div>
                         </div>
-
-                        <!-- Hidden fields -->
-                        <input type="hidden" name="grade" value="A">
-                        <input type="hidden" name="point" value="0">
-
-                        <!-- Submit Button -->
-                        <button type="submit" id="submitBtn" 
-                            class="w-full bg-kuning text-hitam font-bold py-4 px-6 rounded-xl hover:bg-yellow-400 transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
-                            <span>Buat Akun</span>
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </button>
-
-                        <!-- Back Button -->
-                        <a href="/admin/akun" class="mt-4 w-full py-3 px-6 rounded-xl bg-gray-100 text-hitam hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-105">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            <span>Kembali</span>
-                        </a>
                     </div>
+                </div>
+                <!-- Card Keamanan (Password) di bawah grid -->
+                <div class="bg-gray-50 p-6 rounded-xl space-y-6 mt-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Keamanan</h3>
+                    <!-- Password -->
+                    <div class="space-y-2">
+                        <label for="password" class="block text-gray-700 font-medium">Password</label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" placeholder="********" required
+                                class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tombol Submit dan Kembali di bawah form -->
+                <div class="flex flex-col space-y-4 mt-8">
+                    <button type="submit" id="submitBtn" 
+                        class="w-full bg-kuning text-hitam font-bold py-4 px-6 rounded-xl hover:bg-yellow-400 transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                        <span>Buat Akun</span>
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </button>
+                    <a href="/admin/akun" class="w-full py-3 px-6 rounded-xl bg-gray-100 text-hitam hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        <span>Kembali</span>
+                    </a>
                 </div>
             </form>
         </div>

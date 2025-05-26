@@ -90,11 +90,11 @@ class MasyarakatController extends Controller
 
             DB::commit();
             Log::info('Profile updated successfully');
-            return redirect()->back()->with('success', 'Profil berhasil diperbarui');
+            return redirect()->route('masyarakat.profil')->with('success', 'Update berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error updating profile: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal memperbarui profil: ' . $e->getMessage());
         }
     }
-} 
+}

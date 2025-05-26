@@ -3,9 +3,9 @@
 
 @section('Laporan')
 
-<section class="p-6">
+<section class="p-0 -mt-12">
     <!-- Search and Filter -->
-    <div class="max-w-6xl mx-auto mb-8">
+    <div class="max-w-6xl mx-auto mb-2">
         <form method="GET" action="{{ route('masyarakat.laporan.warga') }}" class="flex flex-col md:flex-row gap-4">
             <div class="relative flex-1">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari laporan..."
@@ -18,6 +18,7 @@
                 <option value="">Semua Status</option>
                 <option value="Menunggu" {{ request('status') == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
                 <option value="Di Proses" {{ request('status') == 'Di Proses' ? 'selected' : '' }}>Di Proses</option>
+                <option value="Menunggu Verifikasi Admin" {{ request('status') == 'Menunggu Verifikasi Admin' ? 'selected' : '' }}>Menunggu Verifikasi Admin</option>
                 <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                 <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
             </select>
@@ -45,13 +46,11 @@
                     <div class="absolute top-10 left-5 sm:top-20 sm:left-10 w-24 h-24 sm:w-32 sm:h-32 bg-yellow-400 rounded-full blur-xl"></div>
                     <div class="absolute bottom-5 right-5 sm:bottom-10 sm:right-10 w-32 h-32 sm:w-40 sm:h-40 bg-yellow-300 rounded-full blur-xl"></div>
                 </div>
-
                 <!-- Illustration -->
                 <div class="relative mb-6 sm:mb-8 animate-float">
                     <img src="{{ asset('img/Desain/kosong.svg') }}" alt="Ilustrasi" class="w-36 h-auto sm:w-44 md:w-52 drop-shadow-lg">
                     <div class="absolute -inset-2 sm:-inset-4 bg-yellow-200 rounded-full -z-10 blur-md opacity-70"></div>
                 </div>
-
                 <!-- Text content -->
                 <div class="text-center max-w-sm sm:max-w-md md:max-w-lg mx-auto mb-6 sm:mb-8 px-4">
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 sm:mb-3 leading-tight">
@@ -61,7 +60,6 @@
                         Jadilah yang pertama untuk melaporkan masalah di lingkungan Anda.
                     </p>
                 </div>
-
                 <!-- CTA button -->
                 <a href="/masyarakat/pengaduan/buat/1"
                     class="relative inline-block px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 overflow-hidden">
@@ -75,35 +73,62 @@
             </div>
         @else
             {{-- Grid Card Laporan --}}
+            @php
+                // Ambil query pencarian dan status dari request
+                $q = request('q');
+                $statusFilter = request('status');
+                $filteredLaporans = $laporans->filter(function($laporan) use ($q, $statusFilter) {
+                    $trackProses = $laporan->tracking->where('status', 'Di Proses')->last();
+                    $isMenungguVerif = $trackProses && $trackProses->sub_status == 'menunggu_verifikasi_admin';
+                    // Filter status
+                    if ($statusFilter) {
+                        if ($statusFilter === 'Menunggu' && $laporan->status !== 'Menunggu') return false;
+                        if ($statusFilter === 'Di Proses' && ($laporan->status !== 'Di Proses' || $isMenungguVerif)) return false;
+                        if ($statusFilter === 'Menunggu Verifikasi Admin' && (!$isMenungguVerif || $laporan->status !== 'Di Proses')) return false;
+                        if ($statusFilter === 'Ditolak' && $laporan->status !== 'Ditolak') return false;
+                        if ($statusFilter === 'Selesai' && $laporan->status !== 'Selesai') return false;
+                    }
+                    // Filter search
+                    if ($q) {
+                        $qLower = strtolower($q);
+                        $desc = strtolower($laporan->deskripsi);
+                        $lokasi = strtolower($laporan->lokasi);
+                        if (strpos($desc, $qLower) === false && strpos($lokasi, $qLower) === false) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            @endphp
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($laporans as $laporan)
+                @foreach($filteredLaporans as $laporan)
                     @php
                         $trackProses = $laporan->tracking->where('status', 'Di Proses')->last();
                         $isMenungguVerif = $trackProses && $trackProses->sub_status == 'menunggu_verifikasi_admin';
+                        $detailUrl = '';
+                        if ($laporan->status == 'Menunggu') {
+                            $detailUrl = route('masyarakat.laporan.menunggu', $laporan->id);
+                        } elseif ($laporan->status == 'Di Proses' && $isMenungguVerif) {
+                            $detailUrl = route('masyarakat.laporan.proses.ditindaklanjuti', $laporan->id);
+                        } elseif ($laporan->status == 'Di Proses') {
+                            $detailUrl = route('masyarakat.laporan.proses.diselesaikan', $laporan->id);
+                        } elseif ($laporan->status == 'Ditolak') {
+                            $detailUrl = route('masyarakat.laporan.ditolak', $laporan->id);
+                        } elseif ($laporan->status == 'Selesai') {
+                            $detailUrl = route('masyarakat.laporan.ulasan', $laporan->id);
+                        }
+                        $borderColor = match($laporan->status) {
+                            'Menunggu' => '#FFD600',
+                            'Di Proses' => $isMenungguVerif ? '#093456' : '#2196F3',
+                            'Selesai' => '#43A047',
+                            'Ditolak' => '#E53935',
+                            default => '#FFD600',
+                        };
+                        $badgeColor = $borderColor;
                     @endphp
-                    <div class="card group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4"
-                        @if($laporan->status == 'Menunggu')
-                            style="border-color: #FFD600;"
-                        @elseif($laporan->status == 'Di Proses')
-                            style="border-color: {{ $isMenungguVerif ? '#093456' : '#2196F3' }};"
-                        @elseif($laporan->status == 'Selesai')
-                            style="border-color: #43A047;"
-                        @elseif($laporan->status == 'Ditolak')
-                            style="border-color: #E53935;"
-                        @endif
-                    >
+                    <div class="card group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4" style="border-color: {{ $borderColor }};">
                         {{-- Badge Status --}}
-                        <div class="absolute top-4 right-4 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-sm"
-                            @if($laporan->status == 'Menunggu')
-                                style="background: #FFD600; color: #000;"
-                            @elseif($laporan->status == 'Di Proses')
-                                style="background: {{ $isMenungguVerif ? '#093456' : '#2196F3' }};"
-                            @elseif($laporan->status == 'Selesai')
-                                style="background: #43A047;"
-                            @elseif($laporan->status == 'Ditolak')
-                                style="background: #E53935;"
-                            @endif
-                        >
+                        <div class="absolute top-4 right-4 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-sm" style="background: {{ $badgeColor }};">
                             @if($laporan->status == 'Di Proses')
                                 {{ $isMenungguVerif ? 'Menunggu Verifikasi Admin' : 'On-Proggres' }}
                             @elseif($laporan->status == 'Ditolak')
@@ -112,14 +137,12 @@
                                 {{ $laporan->status }}
                             @endif
                         </div>
-
                         {{-- Link Detail Laporan --}}
-                        <a href="{{ route('masyarakat.laporan.detail', $laporan->id) }}" class="block">
+                        <a href="{{ $detailUrl }}" class="block">
                             {{-- Foto Laporan --}}
                             <div class="relative overflow-hidden">
                                 <img src="{{ asset('storage/' . $laporan->foto_video) }}" alt="Foto Laporan" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
                             </div>
-
                             {{-- Informasi Laporan --}}
                             <div class="p-5">
                                 <div class="flex justify-between items-start">
@@ -141,29 +164,6 @@
                                 </div>
                             </div>
                         </a>
-
-                        {{-- Tombol Interaksi untuk Laporan yang Sedang Diproses --}}
-                        @if($laporan->status == 'Di Proses')
-                        <div class="px-5 pb-5 pt-0">
-                            <div class="flex justify-between items-center">
-                                <div class="flex space-x-4">
-                                    <button class="like-btn flex items-center text-gray-500 hover:text-red-500 transition" data-liked="false">
-                                        <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                        </svg>
-                                        <span>0</span>
-                                    </button>
-                                    <button class="flex items-center text-gray-500 hover:text-blue-500 transition">
-                                        <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                        </svg>
-                                        <span>0</span>
-                                    </button>
-                                </div>
-                                <a href="{{ route('masyarakat.laporan.detail', $laporan->id) }}" class="text-yellow-600 font-medium hover:text-yellow-700 transition-colors">Lihat Detail</a>
-                            </div>
-                        </div>
-                        @endif
                     </div>
                 @endforeach
             </div>

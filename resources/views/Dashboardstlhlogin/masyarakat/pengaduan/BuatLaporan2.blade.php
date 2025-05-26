@@ -2,7 +2,7 @@
 @section('title', 'Edit Alamat & Deskripsi Laporan')
 
 @section('content')
-<section class="py-6 bg-gray-50">
+<section class="py-6">
     {{-- Header Pengaduan with improved styling --}}
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <div class="flex items-center gap-4 mb-4">

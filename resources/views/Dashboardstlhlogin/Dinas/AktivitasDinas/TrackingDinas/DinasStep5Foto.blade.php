@@ -40,7 +40,7 @@
     }
 </style>
 
-<section class="bg-gray-50 min-h-screen p-4">
+<section class="min-h-screen p-4">
     <!-- Loading Screen -->
     <div id="loading" class="loading-overlay hidden">
         <div class="text-center">
@@ -60,12 +60,14 @@
                 </div>
             </div>
             <div class="mt-4 flex justify-center gap-4">
-                <button onclick="capturePhoto()" class="bg-blue-500 text-white px-6 py-2 rounded-full flex items-center">
-                    📸 Ambil Foto
-                </button>
-                <button onclick="closeCamera()" class="bg-gray-500 text-white px-6 py-2 rounded-full">
-                    Batal
-                </button>
+                    <button onclick="capturePhoto()" class="bg-kuning text-hitam px-6 py-2 rounded-full flex items-center gap-2 hover:bg-yellow-600 transition-colors">
+                        <img src="{{ asset('img/logo/kamera.png') }}" alt="Camera Icon" class="w-5 h-5">
+                        Ambil Foto
+                    </button>
+                    <button onclick="window.history.back()" class="bg-merah text-hitam px-6 py-2 rounded-full flex items-center gap-2 hover:bg-red-700 transition-colors">
+                        Batal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -87,21 +89,22 @@
                 <input type="hidden" name="waktu_foto" id="waktu_foto_input">
                 <input type="hidden" name="alamat_foto" id="alamat_foto_input">
             </form>
+
             <div class="flex justify-between">
-                <button onclick="retakePhoto()" class="bg-gray-500 text-white px-4 py-2 rounded-full">
-                    Ulangi Foto
-                </button>
-                <button type="button" onclick="submitReport()" class="bg-green-500 text-white px-6 py-2 rounded-full">
-                    Simpan
-                </button>
-            </div>
+                    <button onclick="retakePhoto()" class="bg-gray-500 hover:bg-kuning text-white px-4 py-2 rounded-full">
+                        Ulangi Foto
+                    </button>
+                    <button onclick="submitReport()" class="bg-kuning hover:bg-yellow-700 text-white px-6 py-2 rounded-full">
+                        Simpan & Lanjutkan
+                    </button>
+                </div>
         </div>
     </div>
 
     <!-- Initial Button -->
     <div id="initialScreen" class="text-center mt-12">
         <button onclick="startApp()"
-            class="bg-blue-500 text-white px-8 py-3 rounded-full text-lg hover:bg-blue-600 transition-colors">
+            class="bg-kuning text-hitam font-semibold px-8 py-3 rounded-full text-lg hover:bg-yellow-600 transition-colors">
             Selesaikan Pelaporan
         </button>
     </div>

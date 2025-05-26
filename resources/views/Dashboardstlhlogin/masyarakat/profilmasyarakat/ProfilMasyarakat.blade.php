@@ -2,7 +2,22 @@
 @section('title', 'Profil Masyarakat')
 
 @section('content')
-<section class="profil bg-gray-50">
+
+@if (session('success'))
+    <div class="fixed top-40 right-10 z-100 max-w-xs">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 rounded shadow-md flex items-center space-x-2" role="alert">
+            <strong class="font-bold">Success!</strong>
+            <span class="inline">{{ session('success') }}</span>
+            <button onclick="this.parentElement.remove()" class="ml-auto text-green-700 hover:text-green-900">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+@endif
+
+<section class="profil">
     <div class="container mx-auto px-4 py-8 flex flex-col items-center space-y-8 max-w-4xl">
         <!-- Profile Header with Avatar -->
         <div class="relative w-full max-w-md flex flex-col items-center">
@@ -16,12 +31,10 @@
         </div>
 
         <!-- Poin Card -->
-        <div class="w-full max-w-md bg-kuning rounded-2xl shadow-lg p-6 transform hover:scale-[1.02] transition-all duration-300">
-            <div class="text-center text-white">
-                <div class="text-xl font-medium mb-2">Total Poin Anda</div>
-                <div class="text-4xl font-bold mb-1">958</div>
-                <div class="text-lg font-light">Poin</div>
-            </div>
+        <div class="w-full max-w-md bg-kuning rounded-3xl shadow-lg mb-8 p-8 text-center border border-gray-300">
+            <div class="text-lg font-semibold mb-2">Yeay kamu sudah mendapat</div>
+            <div class="text-lg font-bold mb-1">{{ $user->masyarakat->poin ?? 0 }}</div>
+            <div class="text-lg italic">Poin</div>
         </div>
 
         <!-- Profile Form Card -->

@@ -56,6 +56,13 @@
                                 </a>
                             </li>
                             <li class="group">
+                                <a href="/admin/statistikDinas"
+                                    class="text-base lg:text-[18px] font-bold py-2 mx-8 lg:mx-0 flex group-hover:text-hitam relative
+                                    {{ request()->is('statistikDinas*') ? 'text-hitam after:content-[\"\"] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-kuning' : 'text-hitam/70 hover:text-hitam' }}">
+                                    Statistik Dinas
+                                </a>
+                            </li>
+                            <li class="group">
                                 <a href="/admin/akun"
                                     class="text-base lg:text-[18px] font-bold py-2 mx-8 lg:mx-0 flex group-hover:text-hitam relative
                                     {{ request()->is('aktivitas*') ? 'text-hitam after:content-[\"\"] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1 after:bg-kuning' : 'text-hitam/70 hover:text-hitam' }}">
@@ -93,7 +100,7 @@
 
 <style>
 .hamburger-line {
-    @apply w-[30px] h-[2px] my-2 block bg-hitam;
+    @apply w-8 h-1.5 my-1.5 block bg-hitam rounded transition-all duration-300;
 }
 
 #hamburger.active span:nth-child(1) {

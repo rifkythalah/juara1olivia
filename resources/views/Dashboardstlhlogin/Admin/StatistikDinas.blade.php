@@ -1,18 +1,20 @@
-@extends('Dashboardstlhlogin.pemerintahpusat.template.template')
-@section('title', 'pusat')
-
+@extends('Dashboardstlhlogin.Admin.Template.Template')
+@section('title', 'Dashboard Admin - LAPOR PAL')
 @section('content')
+
+
 <section class="min-h-screen">
     <div class="container mx-auto px-8 py-4">
         <!-- Header Section -->
-        <div class="flex justify-between items-center mb-2 sm:mb-3">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 ">Beranda</h2>
-        </div>
-        <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
-        
-        <!-- Main Content Section -->
-        <div class="bg-white rounded-xl shadow-xl p-4 sm:p-6">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
+    <div class="flex justify-between items-center mb-2 sm:mb-3">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 ">Beranda</h2>
+    </div>
+    <p class="font-light mb-2">Penilaian Dinas terhadap penyelesaian Laporan tahun 2025</p>
+    <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
+    
+    <!-- Main Content Section -->
+    <div class="bg-white rounded-xl shadow-xl p-6 sm:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-3">
                     <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -86,7 +88,7 @@
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const ctx = document.getElementById('statistikChart').getContext('2d');
-
+                        
                         const chartConfig = {
                             type: 'doughnut',
                             data: {
@@ -147,9 +149,9 @@
                                 }
                             }
                         };
-
+                        
                         const chart = new Chart(ctx, chartConfig);
-
+                        
                         // Resize handler untuk responsivitas
                         window.addEventListener('resize', function() {
                             chart.options.plugins.legend.labels.boxWidth = window.innerWidth < 768 ? 10 : 12;
@@ -169,7 +171,7 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const ctx = document.getElementById('statistikChart').getContext('2d');
-
+                    
                     const chartConfig = {
                         type: 'doughnut',
                         data: {
@@ -246,89 +248,6 @@
             </script>
             </div>
         </div>
-    </div>
 </section>
-
-@push('scripts')
-<script src="{{ asset('js/chart.js/chart.umd.min.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('statistikChart').getContext('2d');
-        
-        const chartConfig = {
-            type: 'doughnut',
-            data: {
-                labels: ['Di Tolak', 'Selesai', 'Di Proses'],
-                datasets: [{
-                    data: [{{ $ditolakCount ?? 0 }}, {{ $selesaiCount ?? 0 }}, {{ $prosesCount ?? 0 }}],
-                    backgroundColor: [
-                        '#FF0000',  // merah
-                        '#00FF00',  // hijau
-                        '#74B3FF'   // biru
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: window.innerWidth < 768 ? 10 : 12,
-                            padding: window.innerWidth < 768 ? 10 : 20,
-                            font: {
-                                size: window.innerWidth < 768 ? 10 : 12
-                            }
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Statistik Status Pengaduan',
-                        font: {
-                            size: window.innerWidth < 768 ? 14 : 16,
-                            weight: 'bold'
-                        },
-                        padding: {
-                            bottom: window.innerWidth < 768 ? 5 : 10
-                        }
-                    },
-                    subtitle: {
-                        display: true,
-                        text: 'Persentase Status Pengaduan',
-                        font: {
-                            size: window.innerWidth < 768 ? 12 : 14
-                        },
-                        padding: {
-                            bottom: window.innerWidth < 768 ? 10 : 20
-                        }
-                    }
-                },
-                cutout: '60%',
-                layout: {
-                    padding: {
-                        top: window.innerWidth < 768 ? 5 : 10,
-                        bottom: window.innerWidth < 768 ? 5 : 10
-                    }
-                }
-            }
-        };
-        
-        const chart = new Chart(ctx, chartConfig);
-        
-        // Resize handler untuk responsivitas
-        window.addEventListener('resize', function() {
-            chart.options.plugins.legend.labels.boxWidth = window.innerWidth < 768 ? 10 : 12;
-            chart.options.plugins.legend.labels.padding = window.innerWidth < 768 ? 10 : 20;
-            chart.options.plugins.legend.labels.font.size = window.innerWidth < 768 ? 10 : 12;
-            chart.options.plugins.title.font.size = window.innerWidth < 768 ? 14 : 16;
-            chart.options.plugins.subtitle.font.size = window.innerWidth < 768 ? 12 : 14;
-            chart.update();
-        });
-    });
-</script>
-@endpush
 
 @endsection

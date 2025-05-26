@@ -3,7 +3,7 @@
 
 @section('content')
 
-<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
+<section class="min-h-screen">
     <div class="container mx-auto px-10">
         <!-- Header Section -->
     <div class="flex justify-between items-center mb-4 sm:mb-6">

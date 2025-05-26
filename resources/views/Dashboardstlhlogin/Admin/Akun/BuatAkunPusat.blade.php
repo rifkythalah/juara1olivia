@@ -72,6 +72,16 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Latitude di kolom kiri -->
+                        <div class="space-y-2">
+                            <label for="latitude" class="block text-hitam font-medium">Latitude</label>
+                            <input type="number" step="any" id="latitude" name="latitude" placeholder="Latitude"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300 @error('latitude') border-red-500 @enderror"
+                                value="{{ old('latitude') }}">
+                            @error('latitude')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <!-- Kolom Kanan -->
@@ -109,6 +119,16 @@
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                        </div>
+                        <!-- Longitude di kolom kanan -->
+                        <div class="space-y-2">
+                            <label for="longitude" class="block text-hitam font-medium">Longitude</label>
+                            <input type="number" step="any" id="longitude" name="longitude" placeholder="Longitude"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-200 focus:border-kuning focus:ring-2 focus:ring-kuning transition-all duration-300 @error('longitude') border-red-500 @enderror"
+                                value="{{ old('longitude') }}">
+                            @error('longitude')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>

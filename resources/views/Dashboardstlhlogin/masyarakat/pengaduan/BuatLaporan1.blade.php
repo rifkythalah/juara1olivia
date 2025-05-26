@@ -75,7 +75,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
                         </svg>
                     </div>
-                    <h3 class="text-center sm:text-left text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-800 hover:text-kuning">
+                    <h3 class="text-center sm:text-left text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-800 hover:text-yellow-600 transition-colors">
                         Buat Laporan Baru
                     </h3>
                 </div>
@@ -358,7 +358,7 @@
     <div class="bg-white rounded-2xl px-8 py-8 max-w-lg w-full text-center shadow-lg relative">
         <div class="text-sm sm:text-2xl font-bold text-black mb-4">
             Mohon maaf tidak bisa mengirim laporan baru.<br>
-            Anda harus menunggu:
+            Anda harus menunggu (2 menit):
         </div>
         <div id="cooldownTimer" class="text-3xl sm:text-5xl font-bold text-black mb-6 font-mono">
             <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
@@ -575,8 +575,8 @@ function startGeoTracking() {
         if(!isMobile && isLocalhost) {
             console.log("Simulating location for desktop localhost");
             currentLocation = {
-                latitude: -7.942895353319409,
-                longitude: 112.637958304063,
+                latitude: -7.951190712166981, 
+                longitude: 112.61351028948994,
                 accuracy: 5
             };
             updateGeoDisplay(); // Panggil update setelah set lokasi

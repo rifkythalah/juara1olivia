@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\PusatController;
+use App\Models\LaporanPengaduan;
+use App\Models\Dinas;
 
 // Public Routes (No Authentication Required)
 Route::get('/', function () {
@@ -55,13 +57,18 @@ Route::get('/LaporanSaya', function () {
     return view('DasboardBelumLogin.Aktivitas.LaporanSaya');
 })->name('laporan.saya');
 
-Route::get('/LaporanWarga', function () {
-    return view('DasboardBelumLogin.Aktivitas.LaporanWarga');
-})->name('laporan.warga');
-
 Route::get('/StatistikPemerintah', function () {
-    return view('DasboardBelumLogin.Aktivitas.StatistikPemerintah');
-})->name('statistik.pemerintah');
+    $dinasList = Dinas::all();
+    $ditolakCount = LaporanPengaduan::where('status', 'Ditolak')->count();
+    $selesaiCount = LaporanPengaduan::where('status', 'Selesai')->count();
+    $prosesCount = LaporanPengaduan::where('status', 'Di Proses')->count();
+    return view('DasboardBelumLogin.Aktivitas.StatistikPemerintah', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+})->name('pemerintah.statistik');
+
+Route::get('/LaporanWarga', function () {
+    $laporans = LaporanPengaduan::with('tracking')->latest()->get();
+    return view('DasboardBelumLogin.Aktivitas.LaporanWarga', compact('laporans'));
+})->name('laporan.warga');
 
 // Auth Processing Routes
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
@@ -109,12 +116,11 @@ Route::middleware('auth')->group(function () {
 
             if ($lastReport) {
                 $now = now();
-                $nextReportTime = \Carbon\Carbon::parse($lastReport)->addHours(24);
+                $nextReportTime = \Carbon\Carbon::parse($lastReport)->addMinutes(2);
                 if ($now->lt($nextReportTime)) {
                     $canReport = false;
                     $remainingTime = [
-                        'hours' => $now->diffInHours($nextReportTime),
-                        'minutes' => $now->diffInMinutes($nextReportTime) % 60,
+                        'minutes' => $now->diffInMinutes($nextReportTime),
                         'seconds' => $now->diffInSeconds($nextReportTime) % 60,
                         'total_seconds' => $now->diffInSeconds($nextReportTime)
                     ];
@@ -125,7 +131,7 @@ Route::middleware('auth')->group(function () {
                 'canReport' => $canReport,
                 'remainingTime' => $remainingTime,
                 'lastReport' => $lastReport ? \Carbon\Carbon::parse($lastReport)->toDateTimeString() : null,
-                'nextReport' => $lastReport ? \Carbon\Carbon::parse($lastReport)->addHours(24)->toDateTimeString() : null
+                'nextReport' => $lastReport ? \Carbon\Carbon::parse($lastReport)->addMinutes(2)->toDateTimeString() : null
             ]);
         });
 
@@ -147,9 +153,7 @@ Route::middleware('auth')->group(function () {
             return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.LaporanAktif');
         })->name('masyarakat.aktivitas');
 
-        Route::get('/masyarakat/aktivitas/StatistikDinas', function () {
-            return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.StatistikPemerintahMasyarakat');
-        })->name('masyarakat.aktivitas');
+        Route::get('/masyarakat/aktivitas/StatistikDinas', [LaporanPengaduanController::class, 'statistikPemerintahMasyarakat'])->name('masyarakat.aktivitas.statistik');
 
         Route::get('/masyarakat/trackinglaporan/LaporanUlasan', function () {
             return view('Dashboardstlhlogin.masyarakat.trackinglaporan.LaporanUlasan');
@@ -157,6 +161,10 @@ Route::middleware('auth')->group(function () {
 
         // Form kirim ulasan (POST)
         Route::post('/masyarakat/laporan/{id}/ulasan', [LaporanPengaduanController::class, 'kirimUlasan'])->name('masyarakat.laporan.kirimUlasan');
+
+        // Komentar dan Like
+        Route::post('/masyarakat/laporan/{id}/komentar', [LaporanPengaduanController::class, 'storeKomentar'])->name('masyarakat.laporan.komentar');
+        Route::post('/masyarakat/laporan/{id}/like', [LaporanPengaduanController::class, 'storeLike'])->name('masyarakat.laporan.like');
 
         // Lihat ulasan publik
         Route::get('/masyarakat/laporan/ulasan/{id}', [LaporanPengaduanController::class, 'lihatUlasan'])->name('masyarakat.laporan.ulasan');
@@ -222,6 +230,14 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/admin/laporan/verifikasi/{id}', [LaporanPengaduanController::class, 'adminVerifikasiLaporan'])->name('admin.laporan.verifikasi');
         Route::post('/admin/laporan/{id}/tolak', [LaporanPengaduanController::class, 'adminTolakLaporan'])->name('admin.laporan.tolak');
+
+        Route::get('/admin/statistikDinas', function () {
+            $dinasList = \App\Models\Dinas::all();
+            $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
+            $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
+            $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
+            return view('Dashboardstlhlogin.Admin.StatistikDinas', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
+        })->name('admin.statistikDinas');
     });
 
     // Dinas Routes
@@ -233,7 +249,45 @@ Route::middleware('auth')->group(function () {
         Route::get('/dinas/laporan/masyarakat', [LaporanPengaduanController::class, 'laporanUtamaDinas'])->name('dinas.laporan.masyarakat');
 
         Route::get('/dinas/statistik', function () {
-            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.StatistikDinas');
+            $dinasList = \App\Models\Dinas::all(); // Ambil semua data dinas (untuk tabel)
+
+            // Ambil user dinas yang sedang login dan model Dinas terkait
+            $user = Auth::user();
+            $dinasUser = $user->dinas()->first(); // Ambil model Dinas terkait user
+
+            \Log::info('Checking dinasUser in statistik route', ['user_id' => $user->id, 'dinasUser_id' => $dinasUser ? $dinasUser->id : null, 'dinasUser_exists' => !is_null($dinasUser)]);
+
+            $ditolakCount = 0;
+            $selesaiCount = 0;
+            $prosesCount = 0;
+
+            if ($dinasUser) {
+                // Hitung laporan Selesai, Di Proses, dan Ditolak untuk dinas yang sedang login
+                $ditolakCount = \App\Models\LaporanPengaduan::where('dinas_id', $dinasUser->id)
+                                ->where('status', 'Ditolak')
+                                ->count();
+
+                $selesaiCount = \App\Models\LaporanPengaduan::where('dinas_id', $dinasUser->id)
+                                ->where('status', 'Selesai')
+                                ->count();
+
+                $prosesCount = \App\Models\LaporanPengaduan::where('dinas_id', $dinasUser->id)
+                                ->where('status', 'Di Proses')
+                                ->count();
+
+                \Log::info('Statistik Dinas Count (Filter Dinas ID)', [
+                    'dinas_id' => $dinasUser->id,
+                    'ditolak' => $ditolakCount,
+                    'selesai' => $selesaiCount,
+                    'proses', $prosesCount,
+                ]);
+
+            } else {
+                 \Log::warning('dinasUser not found for logged in user', ['user_id' => $user->id]);
+            }
+
+            // Lewatkan data dinasList (untuk tabel) dan counts (untuk chart) ke view
+            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.StatistikDinas', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
         })->name('dinas.statistik');
 
         Route::get('/dinas/notifikasi', [LaporanPengaduanController::class, 'notifikasiDinas'])->name('dinas.notifikasi');
@@ -293,8 +347,16 @@ Route::middleware('auth')->group(function () {
     // Pemerintah Pusat Routes
     Route::middleware(['auth', 'role:pemerintahpusat'])->group(function () {
         Route::get('/pemerintahpusat/dashboard', function () {
-            return view('Dashboardstlhlogin.pemerintahpusat.beranda-pusat');
+            $dinasList = \App\Models\Dinas::all();
+            $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
+            $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
+            $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
+            return view('Dashboardstlhlogin.pemerintahpusat.beranda-pusat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
         })->name('pemerintahpusat.dashboard');
+
+        Route::get('/pemerintahpusat/statistikDinas', function () {
+            return view('Dashboardstlhlogin.pemerintahpusat.StatistikDinas.statistikDinas');
+        })->name('pemerintahpusat.statistikDinas');
 
         Route::get('/pemerintahpusat/laporan', function () {
             return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat');
@@ -368,7 +430,7 @@ Route::get('/escalate-menunggu', [LaporanPengaduanController::class, 'escalateMe
 
 
 // Route untuk laporan belum terselesaikan
-Route::get('/pemerintahpusat/laporan/belumterselesaikan/{id}', [PusatController::class, 'laporanBelumTerselesaikan'])
+Route::get('/pemerintahpusat/laporan/belumterselesaikan/{id}', [LaporanPengaduanController::class, 'laporanBelumTerselesaikan'])
     ->name('pemerintahpusat.laporan.belumterselesaikan.detail');
 
 Route::post('/pemerintahpusat/laporan/belum-terselesaikan/{id}/kirim-pesan', [LaporanPengaduanController::class, 'kirimPesanBelumTerselesaikan'])
@@ -380,3 +442,17 @@ Route::get('/pemerintahpusat/laporan/belum-terselesaikan/pesan/{id}', [LaporanPe
 
 // Halaman detail pesan pusat (untuk dinas)
 Route::get('/dinas/laporan/pesan-tidak-terselesaikan/{id}', [LaporanPengaduanController::class, 'pesanTidakTerselesaikanDinas'])->name('dinas.laporan.pesanTidakTerselesaikan');
+
+Route::get('/debug-escalate', [\App\Http\Controllers\LaporanPengaduanController::class, 'escalateUnfinishedLaporan']);
+
+// API untuk marker dinas
+Route::get('/api/marker-dinas', function() {
+    $dinas = \App\Models\Dinas::first();
+    return response()->json($dinas);
+});
+
+// API untuk marker pusat
+Route::get('/api/marker-pusat', function() {
+    $pusat = \App\Models\PemerintahPusatDinas::first();
+    return response()->json($pusat);
+});

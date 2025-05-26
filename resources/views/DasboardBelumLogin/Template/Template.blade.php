@@ -20,14 +20,16 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        /* Hapus style hamburger dan nav-menu, gunakan dari navbar.css */
+    </style>
 </head>
 
 <body>
-
-
+    <script>window.isLoggedIn = false;</script>
 
     <!-- Header -->
-    <header class="bg-white absolute top-0 h-[90px] left-0 w-full flex items-center shadow-lg lg:py-0">
+    <header class="header bg-white absolute top-0 h-[90px] left-0 w-full flex items-center shadow-lg lg:py-0">
         <div class="container">
             <div class="flex items-center justify-between w-full">
                 <!-- Logo -->
@@ -41,9 +43,9 @@
                 <div class="flex items-center ml-auto px-4 lg:px-8">
                     <!-- Hamburger Button (Mobile Only) -->
                     <button id="hamburger" type="button" class="lg:hidden focus:outline-none z-50">
-                        <span class="hamburger-line transition duration-300 ease-in-out"></span>
-                        <span class="hamburger-line transition duration-300 ease-in-out"></span>
-                        <span class="hamburger-line transition duration-300 ease-in-out"></span>
+                        <span class="hamburger-line hamburger-line-yellow transition duration-300 ease-in-out"></span>
+                        <span class="hamburger-line hamburger-line-yellow transition duration-300 ease-in-out"></span>
+                        <span class="hamburger-line hamburger-line-yellow transition duration-300 ease-in-out"></span>
                     </button>
 
                     <!-- Navigation Menu -->
@@ -99,20 +101,16 @@
         </div>
     </header>
 
-
-
     <main class="pt-[100px] flex-grow container mx-auto px-0 py-8">
         @yield('content') <!-- This is where content will be injected -->
     </main>
 
-
-       <!-- Tombol Back to Top -->
-       <button id="backToTopBtn" class="fixed bottom-5 right-5 bg-kuning hover:bg-yellow-500 text-white p-3 rounded-full shadow-lg z-50 hidden transition-all duration-300">
+    <!-- Tombol Back to Top -->
+    <button id="backToTopBtn" class="fixed bottom-5 right-5 bg-kuning hover:bg-yellow-500 text-white p-3 rounded-full shadow-lg z-50 hidden transition-all duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
     </button>
-
 
     <footer class="w-full">
         <!-- Gambar ilustrasi kota Malang -->
@@ -124,10 +122,8 @@
         </div>
     </footer>
 
-
     <!-- Script untuk Leaflet -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 
     <script>
         function toggleDropdown() {
@@ -148,15 +144,33 @@
         document.querySelector('.profile-button').addEventListener('click', function(event) {
             event.stopPropagation();
         });
+
+        // Hamburger color change on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header.header');
+            const lines = document.querySelectorAll('.hamburger-line');
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+                lines.forEach(line => {
+                    line.classList.remove('hamburger-line-yellow');
+                    line.classList.add('hamburger-line-white');
+                });
+            } else {
+                header.classList.remove('scrolled');
+                lines.forEach(line => {
+                    line.classList.remove('hamburger-line-white');
+                    line.classList.add('hamburger-line-yellow');
+                });
+            }
+        });
     </script>
 
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
 </body>
 
 </html>
-<script>
-    AOS.init({
-        duration: 1000,
-        once: true
-    });
-</script>
-</body>

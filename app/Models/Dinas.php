@@ -15,7 +15,6 @@ class Dinas extends Model
         'wilayah',
         'latitude',
         'longitude',
-        'polygon_wilayah',
         'grade',
         'point'
     ];

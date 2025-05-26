@@ -121,187 +121,178 @@
                 </div>
             </section>
 
+@php
+    use Illuminate\Support\Facades\DB;
+    $totalLaporan = DB::table('laporan_pengaduan')->count();
+    $laporanMasuk = $totalLaporan;
+    $laporanDiproses = DB::table('laporan_pengaduan')->where('status', 'Di Proses')->count();
+    $laporanSelesai = DB::table('laporan_pengaduan')->where('status', 'Selesai')->count();
+@endphp
+
 <!-- Statistik Laporan -->
-<section style="background-image: url('/img/Bg/abstrak.png'); background-position: center;" 
-                class="container mx-auto p-8 bg-kuning rounded-lg transition-all hover:shadow-lg hover:bg-yellow-50">
+<section style="background-image: url('/img/Bg/abstrak.png'); background-position: center;" class="container mx-auto p-8 bg-kuning rounded-lg transition-all hover:shadow-lg hover:bg-yellow-50">
+    <!-- Judul di kiri dengan indentasi -->
+    <h2 class="text-[28px] md:text-[32px] font-bold text-black mb-4 text-center">
+        Statistik Laporan
+    </h2>
+    <!-- Subjudul lebih kecil -->
+    <p class="text-[20px] md:text-[24px] italic text-center text-gray-700 mb-8">
+        Jumlah laporan yang diterima oleh LAPOR.PAL
+    </p>
+    <!-- Counter dengan spacing lebih rapi -->
+    <div class="pl-4 md:pl-[30px] text-center">
+        <p id="counter" class="counter-value text-[60px] md:text-[100px] font-bold text-gray-900 leading-none" data-target="{{ $totalLaporan }}">{{ $totalLaporan }}</p>
+    </div>
+</section>
 
-                <!-- Judul di kiri dengan indentasi -->
-                <h2 class="text-[28px] md:text-[32px] font-bold text-black mb-4 indent-4 md:indent-8 text-left">
-                    Statistik Laporan
-                </h2>
+<!-- Laporan Pengaduan -->
+<section class="container mx-auto p-8 bg-white flex flex-col md:flex-row justify-between items-center">
+    <!-- Gambar (Kiri) -->
+    <div class="flex-1 text-center mb-8 md:mb-0">
+        <img src="{{ asset('img/Desain/Tugu.png') }}" alt="Monumen" class="mx-auto" width="364.36" height="473" />
+    </div>
+    <!-- Teks dan Statistik (Kanan) -->
+    <div class="flex-1 text-center">
+        <h2 class="text-[32px] md:text-[48px] font-bold text-gray-800 mb-6">Laporan Pengaduan</h2>
+        <div class="flex flex-col md:flex-row justify-between items-center max-w-md mx-auto text-lg font-semibold text-gray-600">
+            <!-- Item Masuk -->
+            <div class="flex flex-col items-center px-4 mb-6 md:mb-0">
+                <p id="counter-kecamatan" class="counter-value text-[36px] md:text-[48px] font-bold text-gray-900 mb-1" data-target="{{ $laporanMasuk }}">{{ $laporanMasuk }}</p>
+                <p>Laporan Masuk</p>
+            </div>
+            <!-- Item Diproses -->
+            <div class="flex flex-col items-center px-4 mb-6 md:mb-0">
+                <p id="counter-kelurahan" class="counter-value text-[36px] md:text-[48px] font-bold text-gray-900 mb-1" data-target="{{ $laporanDiproses }}">{{ $laporanDiproses }}</p>
+                <p>Laporan Diproses</p>
+            </div>
+            <!-- Item Selesai -->
+            <div class="flex flex-col items-center px-4">
+                <p id="counter-kades" class="counter-value text-[36px] md:text-[48px] font-bold text-gray-900 mb-1" data-target="{{ $laporanSelesai }}">{{ $laporanSelesai }}</p>
+                <p>Laporan Selesai</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <!-- Subjudul lebih kecil -->
-                <p class="text-[20px] md:text-[24px] italic text-center text-gray-700 mb-8">
-                    Jumlah laporan yang diterima oleh LAPOR.PAL
-                </p>
-
-                <!-- Counter dengan spacing lebih rapi -->
-                <div class="pl-4 md:pl-[30px] text-center">
-                    {{-- Tambahkan kelas counter-value --}}
-                    <p id="counter" class="counter-value text-[60px] md:text-[100px] font-bold text-gray-900 leading-none" data-target="100">0</p>
-                </div>
-
-            </section>
-
-            <!-- layanan Ter Integrasi -->
-            <section class="container mx-auto p-8 bg-white flex flex-col md:flex-row justify-between items-center">
-                <!-- Gambar (Kiri) -->
-                <div class="flex-1 text-center mb-8 md:mb-0">
-                    <img src="{{ asset('img/Desain/Tugu.png') }}" alt="Monumen" class="mx-auto" width="364.36" height="473" />
-                </div>
-
-                <!-- Teks dan Statistik (Kanan) -->
-                <div class="flex-1 text-center">
-                    <h2 class="text-[32px] md:text-[48px] font-bold text-gray-800 mb-6">Layanan Terintegrasi</h2>
-
-                    <div class="flex flex-col md:flex-row justify-between items-center max-w-md mx-auto text-lg font-semibold text-gray-600">
-                        <!-- Item Kecamatan -->
-                        <div class="flex flex-col items-center px-4 mb-6 md:mb-0">
-                            {{-- Tambahkan kelas counter-value dan data-target --}}
-                            <p id="counter-kecamatan" class="counter-value text-[36px] md:text-[48px] font-bold text-gray-900 mb-1" data-target="20">0</p>
-                            <p>Kecamatan</p>
-                        </div>
-
-                        <!-- Item Kelurahan -->
-                        <div class="flex flex-col items-center px-4 mb-6 md:mb-0">
-                             {{-- Tambahkan kelas counter-value dan data-target --}}
-                            <p id="counter-kelurahan" class="counter-value text-[36px] md:text-[48px] font-bold text-gray-900 mb-1" data-target="35">0</p>
-                            <p>Kelurahan</p>
-                        </div>
-
-                        <!-- Item Kepala Desa -->
-                        <div class="flex flex-col items-center px-4">
-                             {{-- Tambahkan kelas counter-value dan data-target --}}
-                            <p id="counter-kades" class="counter-value text-[36px] md:text-[48px] font-bold text-gray-900 mb-1" data-target="42">0</p>
-                            <p>Kepala Desa</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Apa kata mereka -->
-            <section class="container mx-auto p-8">
-                <div class="flex flex-col md:flex-row items-center pt-11">
-                    <!-- Garis kiri -->
-                    <div class="flex-1 h-2 bg-gradient-to-r from-transparent to-kuning rounded-full"></div>
-
-                    <h2 class="text-[32px] md:text-[48px] text-center font-bold text-hitam mx-4">Apa kata mereka</h2>
-
-                    <!-- Garis kanan -->
-                    <div class="flex-1 h-2 bg-gradient-to-l from-transparent to-kuning rounded-full"></div>
-                </div>
-
-                <div class="py-12 mt-12 swiper mySwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide ">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl   rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Dengan Lapor.pal, saya bisa ikut berkontribusi menjaga lingkungan sekitar. Praktis, cepat, dan hasilnya nyata.
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Setelah saya lapor, tak lama kemudian tim dari pemerintah daerah langsung turun tangan. Salut untuk responnya.
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Suka banget sama fitur pelacakan laporan di Lapor.pal. Saya bisa lihat status laporan saya kapan saja.
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Sebagai mahasiswa rantau, saya merasa lebih aman karena ada Lapor.pal. Layanan publik jadi lebih terbuka dan responsif.
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Aplikasi Lapor.pal ini keren banget. Gak perlu bingung lagi mau lapor jalan berlubang kemana. Tinggal foto, isi detail, kirim. Mantap.
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Sangat membantu! Laporan jalan rusak saya direspon cepat oleh dinas terkait setelah lapor via Lapor.pal.
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
-                                <p class="font-Lobs text-white">
-                                    Aplikasi Lapor.pal ini keren banget. Gak perlu bingung lagi mau lapor jalan berlubang kemana. Tinggal foto, isi detail, kirim. Mantap
-                                </p>
-                                <div class="flex items-center">
-                                    <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
-                                    <div class="ml-2">
-                                        <p class="text-hitam font-semibold uppercase">FIRDAUS</p>
-                                        <p class="text-white">Menteri Dagri</p>
-                                    </div>
-                                    <i class="ml-auto text-4xl text-white">❞</i>
-                                </div>
-                            </div>
+<!-- Apa kata mereka -->
+<section class="container mx-auto p-8">
+    <div class="flex flex-col md:flex-row items-center pt-11">
+        <!-- Garis kiri -->
+        <div class="flex-1 h-2 bg-gradient-to-r from-transparent to-kuning rounded-full"></div>
+        <h2 class="text-[32px] md:text-[48px] text-center font-bold text-hitam mx-4">Apa kata mereka</h2>
+        <!-- Garis kanan -->
+        <div class="flex-1 h-2 bg-gradient-to-l from-transparent to-kuning rounded-full"></div>
+    </div>
+    <div class="py-12 mt-12 swiper mySwiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl   rounded-md">
+                    <p class="font-Lobs text-white">
+                        Dengan Lapor.pal, saya bisa ikut berkontribusi menjaga lingkungan sekitar. Praktis, cepat, dan hasilnya nyata.
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
                         </div>
                     </div>
-                    <div class="swiper-pagination mt-8"></div>
                 </div>
-            </section>
+            </div>
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
+                    <p class="font-Lobs text-white">
+                        Setelah saya lapor, tak lama kemudian tim dari pemerintah daerah langsung turun tangan. Salut untuk responnya.
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold text-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
+                        </div>
+                        <i class="ml-auto text-4xl text-white">❞</i>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
+                    <p class="font-Lobs text-white">
+                        Suka banget sama fitur pelacakan laporan di Lapor.pal. Saya bisa lihat status laporan saya kapan saja.
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
+                        </div>
+                        <i class="ml-auto text-4xl text-white">❞</i>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
+                    <p class="font-Lobs text-white">
+                        Sebagai mahasiswa rantau, saya merasa lebih aman karena ada Lapor.pal. Layanan publik jadi lebih terbuka dan responsif.
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
+                        </div>
+                        <i class="ml-auto text-4xl text-white">❞</i>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
+                    <p class="font-Lobs text-white">
+                        Aplikasi Lapor.pal ini keren banget. Gak perlu bingung lagi mau lapor jalan berlubang kemana. Tinggal foto, isi detail, kirim. Mantap.
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
+                        </div>
+                        <i class="ml-auto text-4xl text-white">❞</i>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
+                    <p class="font-Lobs text-white">
+                        Sangat membantu! Laporan jalan rusak saya direspon cepat oleh dinas terkait setelah lapor via Lapor.pal.
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
+                        </div>
+                        <i class="ml-auto text-4xl text-white">❞</i>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="flex flex-col gap-5 p-6 bg-kuning shadow-xl  rounded-md">
+                    <p class="font-Lobs text-white">
+                        Aplikasi Lapor.pal ini keren banget. Gak perlu bingung lagi mau lapor jalan berlubang kemana. Tinggal foto, isi detail, kirim. Mantap
+                    </p>
+                    <div class="flex items-center">
+                        <img src="{{ asset('img/logo/profil.png') }}" alt="" class="w-12 h-12 rounded-full">
+                        <div class="ml-2">
+                            <p class="text-black font-semibold uppercase">FIRDAUS</p>
+                            <p class="text-white">Menteri Dagri</p>
+                        </div>
+                        <i class="ml-auto text-4xl text-white">❞</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-pagination mt-8"></div>
+    </div>
+</section>
 
 
     <!-- Laporan Komentar -->

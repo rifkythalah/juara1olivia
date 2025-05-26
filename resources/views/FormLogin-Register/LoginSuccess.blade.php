@@ -67,7 +67,7 @@
 
                         <!-- Login Button -->
                         <div class="max-w-xs mx-auto">
-                            <button type="submit" class="w-full bg-white text-hitam font-bold py-3 px-4 rounded-full hover:text-white  hover:ring-2 ring-white  hover:bg-opacity-90  hover:bg-kuning   transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg">
+                            <button type="submit" class="w-full bg-white text-hitam font-bold py-3 px-4 rounded-full hover:text-white  hover:ring-2 ring-white  hover:bg-opacity-90  hover:bg-kuning   transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg cursor-pointer">
                                 Masuk
                             </button>
                         </div>

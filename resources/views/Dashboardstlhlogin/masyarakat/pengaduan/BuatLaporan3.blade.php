@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Modal Sukses -->
-    <div id="successModal" class="fixed inset-0 bg-opacity-50 z-50 hidden  items-center justify-center p-4">
+    <div id="successModal" class="fixed inset-0 bg-opacity-50 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 max-w-md w-full mx-auto relative transform transition-all" >
             <!-- Close Button -->
             <button onclick="document.getElementById('successModal').classList.add('hidden')"
@@ -102,7 +102,7 @@
                     <button
                         id="submitLaporanButton"
                         type="submit"
-                        class="w-full mb-4 bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                        class="w-full mb-4 bg-yellow-400 hover:bg-abuabu text-black font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
                     >
                         Kirim Laporan
                         <img src="{{ asset('img/icon/kirim.svg') }}" class="w-5 h-5">
@@ -213,7 +213,6 @@
                 }
 
                 if (data.success) {
-                    alert(data.message || 'Laporan berhasil terkirim!');
                     localStorage.removeItem('capturedImageData');
                     localStorage.removeItem('capturedLatitude');
                     localStorage.removeItem('capturedLongitude');
@@ -221,20 +220,11 @@
                     localStorage.removeItem('capturedDeskripsi');
                     window.location.href = '/masyarakat/pengaduan/buat/1';
                 } else {
-                    alert(data.message || 'Gagal mengirim laporan');
                     window.location.href = '/masyarakat/pengaduan/buat/1';
                 }
 
             } catch (error) {
                 console.error('Error:', error);
-
-                if (error.message.includes('Unauthorized') || error.message.includes('session')) {
-                    alert('Sesi Anda telah berakhir. Silakan login kembali.');
-                    window.location.href = '/login';
-                    return;
-                }
-
-                alert(error.message || 'Terjadi kesalahan saat mengirim laporan. Silakan coba lagi.');
 
                 // Re-enable button and restore original text on error
                 submitButton.disabled = false;

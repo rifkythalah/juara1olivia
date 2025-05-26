@@ -98,3 +98,28 @@
   transform: translateY(0);
   pointer-events: auto;
 }
+
+/* Hamburger default hitam */
+.hamburger-line {
+    background-color: #000;
+    transition: background 0.3s;
+}
+/* Saat discroll, tetap hitam */
+.header.scrolled .hamburger-line {
+    background-color: #000;
+}
+.hamburger-line-yellow {
+    background-color: #000;
+    transition: background 0.3s;
+}
+.hamburger-line-white {
+    background-color: #000;
+    transition: background 0.3s;
+}
+@media (max-width: 1023px) {
+    #nav-menu {
+        background: #fff !important;
+        opacity: 1 !important;
+        z-index: 9999 !important;
+    }
+}

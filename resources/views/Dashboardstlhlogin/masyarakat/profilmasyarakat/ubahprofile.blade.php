@@ -2,7 +2,7 @@
 @section('title', 'Ubah Profil')
 
 @section('content')
-<section class="profil bg-gray-50">
+<section class="profil">
     <div class="container mx-auto px-4 py-8 flex flex-col items-center max-w-4xl">
         <!-- Header -->
         <div class="w-full flex items-center gap-4 mb-8">

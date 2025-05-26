@@ -3,16 +3,18 @@
 
 @section('content')
 
-<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-12">
+<section class="min-h-screen py-4">
     <div class="container mx-auto px-8">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Detail Laporan Pengaduan</h2>
-        <a href="/dinas/laporan/step3/diproses" class="text-hitam hover:text-kuning transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-        </a>
+            <div class="flex items-center gap-3">
+                <a href="/dinas/laporan/step3/diproses" class="p-2 hover:bg-gray-100 rounded-lg transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Detail Laporan Pengaduan</h2>
+            </div>
     </div>
     <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
 
@@ -88,71 +90,39 @@
                     </div>
                                        <!-- Like and Comment Count Section -->
     <div class="max-w-4xl mx-auto px-4 mb-4 flex items-center space-x-4 my-8">
-        <button class="flex items-center space-x-1 text-gray-600 hover:text-blue-500">
+        <span class="flex items-center space-x-1 text-gray-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
             </svg>
-            <span>7</span>
-        </button>
-        <div class="flex items-center space-x-1 text-gray-600">
+            <span>{{ $likeCount }}</span>
+        </span>
+        <span class="flex items-center space-x-1 text-gray-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <span>2</span>
-        </div>
+            <span>{{ $komentar->count() }}</span>
+        </span>
     </div>
                      <!-- Komentar dipindahkan ke bawah Selesaikan Laporan -->
                 <div class="bg-white rounded-xl shadow-xl p-8 h-full pt-4 mt-7">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Komentar</h3>
-                    {{-- Area untuk menampilkan komentar dengan scroll --}}
                     <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
-                        <!-- Comment Example 1 (User) -->
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">...Trimakasih sudah melakukan pelaporan</p>
+                        @forelse($komentar as $k)
+                            <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
+                                @if($k->user_id != auth()->user()->id)
+                                    <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                                @endif
+                                <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
+                                    <p class="text-sm text-gray-800">{{ $k->isi_komentar }}</p>
+                                    <span class="text-xs text-gray-400">{{ $k->user->username ?? 'User' }} - {{ $k->created_at->diffForHumans() }}</span>
+                                </div>
+                                @if($k->user_id == auth()->user()->id)
+                                    <img src="{{ ($k->user && $k->user->masyarakat && $k->user->masyarakat->foto_profil) ? 'data:image;base64,' . base64_encode($k->user->masyarakat->foto_profil) : asset('img/logo/profil.png') }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                                @endif
                             </div>
-                        </div>
-
-                        <!-- Comment Example 2 (Another User/Admin) -->
-                        <div class="flex items-start justify-end space-x-3">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Iyaa</p>
-                            </div>
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="Admin Avatar" class="w-10 h-10 rounded-full">
-                        </div>
-
-                        {{-- Test scroll comments --}}
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Semoga cepat ditangani ya.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start justify-end space-x-3">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Siap, sedang kami proses.</p>
-                            </div>
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="Admin Avatar" class="w-10 h-10 rounded-full">
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Terima kasih informasinya.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Terima kasih informasinya.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="{{ asset('img/logo/profil.png') }}" alt="User Avatar" class="w-10 h-10 rounded-full">
-                            <div class="bg-kuning p-3 rounded-lg shadow max-w-xs sm:max-w-md">
-                                <p class="text-sm text-gray-800">Terima kasih informasinya.</p>
-                            </div>
-                        </div>
+                        @empty
+                            <p class="text-center text-gray-500">Belum ada komentar untuk laporan ini.</p>
+                        @endforelse
                     </div>
                 </div>
                 </div>
@@ -278,19 +248,19 @@
                                 <!-- Status 3 - Future -->
                                 <div class="relative flex items-start group">
                                     <div class="absolute left-0 flex items-center justify-center transform -translate-x-1/2 -translate-y-3">
-                                        <div class="h-6 w-6 rounded-full bg-gray-200 border-4 border-white shadow-lg"></div>
+                                        <div class="h-5 md:h-6 w-5 md:w-6 rounded-full bg-gray-200 border-4 border-white shadow-lg"></div>
                                     </div>
-                                    <div class="pl-8">
-                                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                    <div class="pl-5 md:pl-7 w-full">
+                                        <div class="bg-gray-50 p-3 md:p-4 rounded-lg border border-gray-100 shadow-sm w-full">
                                             <div class="flex items-center">
-                                                <span class="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 mr-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <span class="flex items-center justify-center h-6 w-6 md:h-7 md:w-7 rounded-full bg-gray-200 mr-2.5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                                     </svg>
                                                 </span>
-                                                <h3 class="text-lg font-semibold text-gray-500">Selesai</h3>
+                                                <h3 class="text-base md:text-lg font-semibold text-gray-500">Selesai</h3>
                                             </div>
-                                            <p class="text-gray-400 mt-2 ml-11">Laporanmu sudah selesai</p>
+                                            <p class="text-sm md:text-base text-gray-400 mt-1.5 md:mt-2 ml-8 md:ml-9">Laporanmu sudah selesai</p>
                                         </div>
                                     </div>
                                 </div>
@@ -327,9 +297,7 @@
 
             <!-- Action Buttons -->
             <div class="flex justify-center pt-2">
-                <button onclick="window.location.href='{{ route('dinas.laporan.step5.foto', $laporan->id) }}';" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-colors shadow-md">
-                    Mengerti
-                </button>
+                <button onclick="window.location.href='{{ route('dinas.laporan.step5.foto', $laporan->id) }}';" class="px-8 py-3 bg-kuning text-hitam hover:text-white hover:bg-kuning hover:ring-2 ring-white hover:bg-opacity-90 transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg rounded-full">Mengerti</button>
             </div>
         </div>
     </div>
@@ -475,18 +443,18 @@
 
 
 <!-- Modal Perangkat Tidak Didukung (seperti gambar 2) -->
-<div id="deviceModal" class="fixed inset-0 flex items-center justify-center bg-opacity-60 z-50 hidden">
-    <div class="bg-kuning rounded-2xl p-8 w-full max-w-md text-center relative">
+<div id="deviceModal" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-opacity-60 z-50 hidden">
+    <div class="bg-white rounded-2xl p-8 w-full max-w-md text-center relative">
         <button onclick="closeDeviceModal()" class="absolute top-4 right-4 text-2xl font-bold text-gray-700">&times;</button>
-        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-white mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-kuning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-kuning mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-hitam" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
         </div>
         <h3 class="text-2xl font-bold text-gray-800">Perangkat Tidak Didukung</h3>
-        <p class="text-white mt-1">Fitur pengambilan foto hanya tersedia di perangkat mobile</p>
+        <p class="text-kuning mt-1">Fitur pengambilan foto hanya tersedia di perangkat mobile</p>
         <div class="flex justify-center pt-2">
-            <button onclick="window.location.href='{{ route('dinas.laporan.step5.foto', $laporan->id) }}';" class="px-6 py-2.5 bg-white text-hitam hover:text-white hover:bg-kuning hover:ring-2 ring-white hover:bg-opacity-90 transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg">Mengerti</button>
+            <button onclick="window.location.href='{{ route('dinas.laporan.step5.foto', $laporan->id) }}';" class="px-8 py-3 bg-kuning text-hitam hover:text-white hover:bg-kuning hover:ring-2 ring-white hover:bg-opacity-90 transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg rounded-full">Mengerti</button>
         </div>
     </div>
 </div>

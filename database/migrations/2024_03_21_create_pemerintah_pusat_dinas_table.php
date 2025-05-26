@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nomor_telepon', 15);
             $table->string('email');
             $table->string('wilayah');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
 
             // Membuat kombinasi user_id dan dinas_id unik

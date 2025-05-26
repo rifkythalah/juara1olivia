@@ -14,7 +14,7 @@
       </span>
     </a>
 
-    <!-- Statik Pemerintah -->
+    <!-- Statik Dinas -->
     <a href="/dinas/statistik" 
        class="nav-link px-6 py-3 font-bold rounded-lg border-2 border-yellow-500 transition-all duration-300 
        {{ request()->is('dinas/statistik*') ? 'bg-yellow-400 text-black border-transparent' : '' }}">
