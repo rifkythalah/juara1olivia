@@ -26,7 +26,7 @@
         <div class="bg-kuning rounded-2xl p-8 shadow-lg">
             <h2 class="text-2xl font-bold text-hitam mb-6">Akun Pemerintah Pusat</h2>
             
-            <form action="{{ route('admin.akun.pusat.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.akun.pusat.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Kolom Kiri -->
@@ -36,7 +36,7 @@
                             <label for="nama_lengkap" class="block text-hitam font-medium mb-2">Nama Pemerintah Pusat</label>
                             <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Nama Lengkap" 
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('nama_lengkap') border-red-500 @enderror"
-                                value="{{ old('nama_lengkap') }}" required>
+                                value="{{ old('nama_lengkap', $user->nama_lengkap) }}" required>
                             @error('nama_lengkap')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -47,7 +47,7 @@
                             <label for="username" class="block text-hitam font-medium mb-2">Username</label>
                             <input type="text" id="username" name="username" placeholder="Username" 
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('username') border-red-500 @enderror"
-                                value="{{ old('username') }}" required>
+                                value="{{ old('username', $user->username) }}" required>
                             @error('username')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -58,7 +58,7 @@
                             <label for="email" class="block text-hitam font-medium mb-2">Email</label>
                             <input type="email" id="email" name="email" placeholder="email@contoh.com"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('email') border-red-500 @enderror"
-                                value="{{ old('email') }}" required>
+                                value="{{ old('email', $user->email) }}" required>
                             @error('email')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -69,6 +69,9 @@
                             <label for="foto_profil" class="block text-hitam font-medium mb-2">Foto Profil</label>
                             <input type="file" id="foto_profil" name="foto_profil" accept="image/*"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @if($pusat->foto_profil)
+                                <img src="{{ asset('storage/' . $pusat->foto_profil) }}" alt="Foto Profil" class="w-16 h-16 rounded-full mt-2">
+                            @endif
                         </div>
                     </div>
 
@@ -98,7 +101,7 @@
                             <label for="nomor_telepon" class="block text-hitam font-medium mb-2">Nomor Telepon</label>
                             <input type="text" id="nomor_telepon" name="nomor_telepon" placeholder="08xxxxxxxxxx"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('nomor_telepon') border-red-500 @enderror"
-                                value="{{ old('nomor_telepon') }}" required>
+                                value="{{ old('nomor_telepon', $user->nomor_telepon) }}" required>
                             @error('nomor_telepon')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -108,7 +111,7 @@
                             <label for="latitude" class="block text-hitam font-medium mb-2">Latitude</label>
                             <input type="number" step="any" id="latitude" name="latitude" placeholder="Latitude"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('latitude') border-red-500 @enderror"
-                                value="{{ old('latitude') }}">
+                                value="{{ old('latitude', $pusat->latitude) }}">
                             @error('latitude')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -118,7 +121,7 @@
                             <label for="longitude" class="block text-hitam font-medium mb-2">Longitude</label>
                             <input type="number" step="any" id="longitude" name="longitude" placeholder="Longitude"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam @error('longitude') border-red-500 @enderror"
-                                value="{{ old('longitude') }}">
+                                value="{{ old('longitude', $pusat->longitude) }}">
                             @error('longitude')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -147,7 +150,7 @@
                 <!-- Submit Button -->
                 <div class="mt-8">
                     <button type="submit" class="w-full bg-white text-hitam font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition duration-200">
-                        Buat Akun
+                        Simpan Perubahan
                     </button>
                 </div>
             </form>
@@ -164,29 +167,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Pendaftaran Berhasil!</h3>
-            <p class="text-gray-500 mb-6">Akun baru telah berhasil dibuat.</p>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Akun Berhasil Diubah</h3>
+            <p class="text-gray-500 mb-6">Akun telah berhasil diubah.</p>
         </div>
     </div>
 </div>
 
-<script>
-function showSuccessModal(event) {
-    event.preventDefault();
-    const modal = document.getElementById('successModal');
-    modal.classList.remove('hidden');
-    
-    // Redirect ke halaman akun setelah 2 detik
-    setTimeout(() => {
-        window.location.href = '/admin/akun';
-    }, 2000);
-}
 
-// Tutup modal ketika mengklik di luar modal
-document.getElementById('successModal').addEventListener('click', function(event) {
-    if (event.target === this) {
-        this.classList.add('hidden');
-    }
-});
-</script>
 @endsection

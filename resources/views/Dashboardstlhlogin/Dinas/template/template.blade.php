@@ -75,7 +75,7 @@
                         <div class="relative">
                             <button class="profile-button flex items-center focus:outline-none">
                                 <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                                    <img src="{{ asset('img/logo/pupr.jpg') }}" alt="Profil Lapor.Pal" class="w-full h-full object-cover" />
+                                    <img src="{{ isset($dinas) && $dinas->foto_profil ? asset('storage/' . $dinas->foto_profil) : asset('img/logo/pupr.jpg') }}" alt="Profil Dinas" class="w-full h-full object-cover" />
                                 </div>
                             </button>
 

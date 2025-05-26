@@ -33,7 +33,8 @@ class PusatController extends Controller
                 'longitude' => ['nullable', 'numeric'],
                 'dinas' => ['required', 'array', 'min:1'],
                 'dinas.*' => ['exists:dinas,id'],
-                'nik' => ['nullable', 'prohibited']
+                'nik' => ['nullable', 'prohibited'],
+                'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
             ]);
 
             Log::info('Validation passed', ['validated_data' => $validated]);
@@ -53,6 +54,12 @@ class PusatController extends Controller
 
             Log::info('User created', ['user_id' => $user->id]);
 
+            // Upload foto profil jika ada
+            $fotoProfilPath = null;
+            if ($request->hasFile('foto_profil')) {
+                $fotoProfilPath = $request->file('foto_profil')->store('foto_profil_pusat', 'public');
+            }
+
             // Prepare pivot data
             $pivotData = [];
             foreach ($request->dinas as $dinasId) {
@@ -71,6 +78,19 @@ class PusatController extends Controller
             $user->dinasPusat()->attach($pivotData);
 
             Log::info('Dinas attached', ['dinas_ids' => $request->dinas]);
+
+            // Setelah create user, simpan ke pemerintah_pusat_dinas
+            $pemerintahPusat = new \App\Models\PemerintahPusatDinas();
+            $pemerintahPusat->user_id = $user->id;
+            $pemerintahPusat->dinas_id = $request->dinas[0] ?? null;
+            $pemerintahPusat->username = $request->username;
+            $pemerintahPusat->nomor_telepon = $request->nomor_telepon;
+            $pemerintahPusat->email = $request->email;
+            $pemerintahPusat->wilayah = $request->wilayah ?? null;
+            $pemerintahPusat->latitude = $request->latitude;
+            $pemerintahPusat->longitude = $request->longitude;
+            $pemerintahPusat->foto_profil = $fotoProfilPath;
+            $pemerintahPusat->save();
 
             DB::commit();
 
@@ -100,12 +120,70 @@ class PusatController extends Controller
         return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat', compact('laporans'));
     }
 
+    public function dashboard()
+    {
+        $user = auth()->user();
+        $pusat = \App\Models\PemerintahPusatDinas::where('user_id', $user->id)->first();
+        $dinasList = \App\Models\Dinas::all();
+        $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
+        $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
+        $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
+        return view('Dashboardstlhlogin.pemerintahpusat.beranda-pusat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount', 'pusat'));
+    }
+
     public function laporanPusat()
     {
+        $user = auth()->user();
+        $pusat = \App\Models\PemerintahPusatDinas::where('user_id', $user->id)->first();
         $trackingIds = \App\Models\TrackingLaporan::where('escalated_to_pusat', 1)
             ->where('status', 'Tidak Terselesaikan')
             ->pluck('pengaduan_id');
         $laporans = \App\Models\LaporanPengaduan::whereIn('id', $trackingIds)->get();
-        return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat', compact('laporans'));
+        return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat', compact('laporans', 'pusat'));
+    }
+
+    public function edit($id)
+    {
+        $pusat = \App\Models\PemerintahPusatDinas::where('user_id', $id)->firstOrFail();
+        $user = \App\Models\User::findOrFail($id);
+        $dinas = \App\Models\Dinas::all();
+        return view('Dashboardstlhlogin.Admin.Akun.editAkunPusat', compact('pusat', 'user', 'dinas'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        $pusat = \App\Models\PemerintahPusatDinas::where('user_id', $id)->firstOrFail();
+
+        $validated = $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'nomor_telepon' => 'required|string|max:15',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+        ]);
+
+        // Update user
+        $user->nama_lengkap = $request->nama_lengkap;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->nomor_telepon = $request->nomor_telepon;
+        $user->save();
+
+        // Update pusat
+        $pusat->username = $request->username;
+        $pusat->nomor_telepon = $request->nomor_telepon;
+        $pusat->email = $request->email;
+        $pusat->latitude = $request->latitude;
+        $pusat->longitude = $request->longitude;
+        if ($request->hasFile('foto_profil')) {
+            $fotoProfilPath = $request->file('foto_profil')->store('foto_profil_pusat', 'public');
+            $pusat->foto_profil = $fotoProfilPath;
+        }
+        $pusat->save();
+
+        return redirect()->route('admin.akun')->with('success', 'Akun pemerintah pusat berhasil diupdate.');
     }
 } 

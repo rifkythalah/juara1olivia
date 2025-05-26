@@ -82,8 +82,18 @@
                             @if($user->role === 'admin')
                                 <span class="px-4 py-1.5 text-sm font-medium text-red-600 bg-red-100 rounded-full">Admin</span>
                             @elseif($user->role === 'dinas')
+                                <a href="{{ route('admin.akun.dinas.edit', $user->id) }}" class="inline-block align-middle mr-1" title="Edit Akun Dinas">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 hover:text-kuning inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m2-2l-6 6m2-2l6-6" />
+                                    </svg>
+                                </a>
                                 <span class="px-4 py-1.5 text-sm font-medium text-green-600 bg-green-100 rounded-full">Dinas</span>
                             @elseif($user->role === 'pemerintahpusat')
+                                <a href="{{ route('admin.akun.pusat.edit', $user->id) }}" class="inline-block align-middle mr-1" title="Edit Akun Pusat">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 hover:text-kuning inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m2-2l-6 6m2-2l6-6" />
+                                    </svg>
+                                </a>
                                 <span class="px-4 py-1.5 text-sm font-medium text-blue-600 bg-blue-100 rounded-full">Pemerintah Pusat</span>
                             @else
                                 <span class="px-4 py-1.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-full">{{ ucfirst($user->role) }}</span>

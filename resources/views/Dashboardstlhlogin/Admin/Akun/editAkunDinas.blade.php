@@ -20,7 +20,13 @@
         <div class="bg-kuning rounded-2xl p-8 shadow-lg">
             <h2 class="text-2xl font-bold text-hitam mb-6">Akun Dinas</h2>
             
-            <form id="formBuatAkun" action="{{ route('admin.akun.dinas.store') }}" method="POST" enctype="multipart/form-data">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+            
+            <form id="formEditAkun" action="{{ route('admin.akun.dinas.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Kolom Kiri -->
@@ -28,44 +34,41 @@
                         <!-- Nama Dinas -->
                         <div class="space-y-2">
                             <label for="name" class="block text-hitam font-medium">Nama Dinas</label>
-                            <input type="text" id="name" name="name" placeholder="Nama Dinas" required
+                            <input type="text" id="name" name="name" placeholder="Nama Dinas" required value="{{ old('name', $user->nama_lengkap) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('name')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Username -->
                         <div class="space-y-2">
                             <label for="username" class="block text-hitam font-medium">Username</label>
-                            <input type="text" id="username" name="username" placeholder="Username" required
+                            <input type="text" id="username" name="username" placeholder="Username" required value="{{ old('username', $user->username) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('username')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Email -->
                         <div class="space-y-2">
                             <label for="email" class="block text-hitam font-medium">Email</label>
-                            <input type="email" id="email" name="email" placeholder="dinas@example.com" required
+                            <input type="email" id="email" name="email" placeholder="dinas@example.com" required value="{{ old('email', $user->email) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
-                            <p class="text-sm text-gray-500">Gunakan email yang belum terdaftar</p>
+                            @error('email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Nomor Telepon -->
                         <div class="space-y-2">
                             <label for="nomor_telepon" class="block text-hitam font-medium">Nomor Telepon</label>
-                            <input type="tel" id="nomor_telepon" name="nomor_telepon" placeholder="081234567890" required
+                            <input type="tel" id="nomor_telepon" name="nomor_telepon" placeholder="081234567890" required value="{{ old('nomor_telepon', $user->nomor_telepon) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
-                        </div>
-
-                        <!-- Password -->
-                        <div class="space-y-2">
-                            <label for="password" class="block text-hitam font-medium">Password</label>
-                            <input type="password" id="password" name="password" placeholder="********" required
-                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('nomor_telepon')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Wilayah -->
                         <div class="space-y-2">
                             <label for="wilayah" class="block text-hitam font-medium">Wilayah</label>
-                            <input type="text" id="wilayah" name="wilayah" placeholder="Nama Wilayah" required
+                            <input type="text" id="wilayah" name="wilayah" placeholder="Nama Wilayah" required value="{{ old('wilayah', $dinas->wilayah) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('wilayah')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Foto Profil -->
@@ -73,6 +76,18 @@
                             <label for="foto_profil" class="block text-hitam font-medium">Foto Profil</label>
                             <input type="file" id="foto_profil" name="foto_profil" accept="image/*"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @if($dinas->foto_profil)
+                                <img src="{{ asset('storage/' . $dinas->foto_profil) }}" alt="Foto Profil" class="w-16 h-16 rounded-full mt-2">
+                            @endif
+                            @error('foto_profil')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        </div>
+
+                        <!-- Password (Opsional) -->
+                        <div class="space-y-2">
+                            <label for="password" class="block text-hitam font-medium">Password <span class="text-xs text-gray-500">(Opsional, isi jika ingin mengganti)</span></label>
+                            <input type="password" id="password" name="password" placeholder="********"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
                     </div>
 
@@ -81,15 +96,17 @@
                         <!-- Latitude -->
                         <div class="space-y-2">
                             <label for="latitude" class="block text-hitam font-medium">Latitude</label>
-                            <input type="number" step="any" id="latitude" name="latitude" placeholder="Latitude" required
+                            <input type="number" step="any" id="latitude" name="latitude" placeholder="Latitude" required value="{{ old('latitude', $dinas->latitude) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('latitude')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Longitude -->
                         <div class="space-y-2">
                             <label for="longitude" class="block text-hitam font-medium">Longitude</label>
-                            <input type="number" step="any" id="longitude" name="longitude" placeholder="Longitude" required
+                            <input type="number" step="any" id="longitude" name="longitude" placeholder="Longitude" required value="{{ old('longitude', $dinas->longitude) }}"
                                 class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                            @error('longitude')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <!-- Hidden fields for grade and point -->
@@ -101,7 +118,7 @@
                 <!-- Submit Button -->
                 <div class="mt-8">
                     <button type="submit" id="submitBtn" class="w-full bg-white text-hitam font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition duration-200">
-                        Buat Akun
+                        Simpan Perubahan
                     </button>
                 </div>
             </form>
@@ -118,74 +135,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Pendaftaran Berhasil!</h3>
-            <p class="text-gray-500 mb-6">Akun baru telah berhasil dibuat.</p>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Akun Berhasil Diubah</h3>
+            <p class="text-gray-500 mb-6">Akun telah berhasil diubah.</p>
         </div>
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('formBuatAkun');
-    const submitBtn = document.getElementById('submitBtn');
-    const successModal = document.getElementById('successModal');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Disable submit button
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Memproses...';
-        
-        const formData = new FormData(this);
-        
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    if (data.errors) {
-                        // Format validation errors
-                        const errorMessages = Object.entries(data.errors)
-                            .map(([field, messages]) => {
-                                const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
-                                return `${fieldName}: ${messages.join(', ')}`;
-                            })
-                            .join('\n');
-                        throw new Error(errorMessages);
-                    }
-                    throw new Error(data.message || 'Terjadi kesalahan');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.message) {
-                successModal.classList.remove('hidden');
-                setTimeout(() => {
-                    window.location.href = '/admin/akun';
-                }, 2000);
-            }
-        })
-        .catch(error => {
-            alert(error.message);
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Buat Akun';
-        });
-    });
-
-    // Close modal when clicking outside
-    successModal.addEventListener('click', function(event) {
-        if (event.target === this) {
-            this.classList.add('hidden');
-        }
-    });
-});
-</script>
 @endsection

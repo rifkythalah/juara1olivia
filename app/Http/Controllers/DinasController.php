@@ -65,6 +65,12 @@ class DinasController extends Controller
         }
 
         try {
+            // Upload foto profil jika ada
+            $fotoProfilPath = null;
+            if ($request->hasFile('foto_profil')) {
+                $fotoProfilPath = $request->file('foto_profil')->store('foto_profil_dinas', 'public');
+            }
+
             // Create user
             $user = User::create([
                 'nama_lengkap' => $request->name,
@@ -84,7 +90,8 @@ class DinasController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'grade' => 'A', // Default grade
-                'point' => 0 // Default point
+                'point' => 0, // Default point
+                'foto_profil' => $fotoProfilPath,
             ]);
 
             // Get laporan utama
@@ -162,5 +169,64 @@ class DinasController extends Controller
 
         \Log::error('File tidak ditemukan di request.');
         return response()->json(['success' => false, 'message' => 'Gagal upload foto!'], 400);
+    }
+
+    public function edit($id)
+    {
+        $dinas = \App\Models\Dinas::where('user_id', $id)->firstOrFail();
+        $user = \App\Models\User::findOrFail($id);
+        return view('Dashboardstlhlogin.Admin.Akun.editAkunDinas', compact('dinas', 'user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = \App\Models\User::findOrFail($id);
+        $dinas = \App\Models\Dinas::where('user_id', $id)->firstOrFail();
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'nomor_telepon' => 'required|string|max:15',
+            'wilayah' => 'required|string|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'password' => 'nullable|string|min:8',
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // Update user
+        $user->nama_lengkap = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->nomor_telepon = $request->nomor_telepon;
+        if ($request->filled('password')) {
+            $user->password = \Hash::make($request->password);
+        }
+        $user->save();
+
+        // Update dinas
+        $dinas->username = $request->username;
+        $dinas->wilayah = $request->wilayah;
+        $dinas->latitude = $request->latitude;
+        $dinas->longitude = $request->longitude;
+        if ($request->hasFile('foto_profil')) {
+            $fotoProfilPath = $request->file('foto_profil')->store('foto_profil_dinas', 'public');
+            $dinas->foto_profil = $fotoProfilPath;
+        }
+        $dinas->save();
+
+        return redirect()->route('admin.akun')->with('success', 'Akun dinas berhasil diupdate.');
+    }
+
+    public function dashboard()
+    {
+        $user = auth()->user();
+        $dinas = \App\Models\Dinas::where('user_id', $user->id)->first();
+        // Data lain untuk dashboard bisa ditambah di sini
+        return view('Dashboardstlhlogin.Dinas.DasboardDinas', compact('dinas'));
     }
 }
