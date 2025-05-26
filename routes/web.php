@@ -202,9 +202,7 @@ Route::middleware('auth')->group(function () {
 
     // Admin Routes
     Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('Dashboardstlhlogin.Admin.Dashboard');
-        })->name('admin.dashboard');
+        Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         Route::get('/admin/laporan', [LaporanPengaduanController::class, 'indexLaporanAdmin'])->name('admin.laporan');
 
@@ -389,11 +387,11 @@ Route::prefix('admin')->group(function () {
 });
 
 // Admin Protected Routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('Dashboardstlhlogin.Admin.Dashboard');
-    })->name('admin.dashboard');
-});
+// Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('Dashboardstlhlogin.Admin.Dashboard');
+//     })->name('admin.dashboard');
+// });
 
 Route::post('/notifikasi/{id}/dismiss', [LaporanPengaduanController::class, 'dismissNotif'])->name('notifikasi.dismiss');
 Route::post('/notifikasi/{id}/read', [LaporanPengaduanController::class, 'readNotif'])->name('notifikasi.read');

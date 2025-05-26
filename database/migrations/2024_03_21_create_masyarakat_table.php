@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('masyarakat_id')->unique();
             $table->binary('foto_profil')->nullable();
             $table->integer('poin')->default(0);
+            $table->timestamp('last_report_at')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
