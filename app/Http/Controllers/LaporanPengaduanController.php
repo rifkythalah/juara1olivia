@@ -290,7 +290,16 @@ class LaporanPengaduanController extends Controller
             ]);
         }
 
-        return redirect()->route('dinas.laporan.step4.diproses', ['id' => $laporan->id]);
+        // Ambil data like dan komentar
+        $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $laporan->id)->with('user')->latest()->get();
+        $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $laporan->id)->count();
+
+        // Tampilkan view step4Diproses langsung agar variabel tersedia
+        return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep4Diproses', [
+            'laporan' => $laporan,
+            'komentar' => $komentar,
+            'likeCount' => $likeCount
+        ]);
     }
 
     public function detailLaporanDinas($id)
@@ -595,7 +604,10 @@ class LaporanPengaduanController extends Controller
         $laporan = \App\Models\LaporanPengaduan::with(['penyelesaian', 'tracking'])->findOrFail($id);
         $komentar = \App\Models\KomentarLaporan::where('pengaduan_id', $id)->with('user')->latest()->get();
         $likeCount = \App\Models\LikeLaporan::where('pengaduan_id', $id)->count();
-        return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporan', compact('laporan', 'komentar', 'likeCount'));
+        $foto_video = $laporan->foto_video;
+        $penyelesaian = $laporan->penyelesaian;
+        $trackingUtama = $laporan->tracking;
+        return view('Dashboardstlhlogin.Admin.Laporan.DetailLaporan', compact('laporan', 'komentar', 'likeCount', 'foto_video', 'penyelesaian', 'trackingUtama'));
     }
 
     public function indexLaporanAdmin(Request $request)

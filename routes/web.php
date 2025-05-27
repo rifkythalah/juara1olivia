@@ -149,10 +149,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/masyarakat/aktivitas/LaporanWarga', [LaporanPengaduanController::class, 'laporanWargaMasyarakat'])->name('masyarakat.laporan.warga');
 
-        Route::get('/masyarakat/aktivitas/LaporanAktif', function () {
-            return view('Dashboardstlhlogin.masyarakat.AktivitasMasyarakat.LaporanAktif');
-        })->name('masyarakat.aktivitas');
-
         Route::get('/masyarakat/aktivitas/StatistikDinas', [LaporanPengaduanController::class, 'statistikPemerintahMasyarakat'])->name('masyarakat.aktivitas.statistik');
 
         Route::get('/masyarakat/trackinglaporan/LaporanUlasan', function () {
@@ -206,9 +202,7 @@ Route::middleware('auth')->group(function () {
 
     // Admin Routes
     Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('Dashboardstlhlogin.Admin.Dashboard');
-        })->name('admin.dashboard');
+        Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         Route::get('/admin/laporan', [LaporanPengaduanController::class, 'indexLaporanAdmin'])->name('admin.laporan');
 
@@ -238,6 +232,13 @@ Route::middleware('auth')->group(function () {
             $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
             return view('Dashboardstlhlogin.Admin.StatistikDinas', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
         })->name('admin.statistikDinas');
+
+        // Edit Akun Dinas
+        Route::get('/admin/akun/dinas/{id}/edit', [App\Http\Controllers\DinasController::class, 'edit'])->name('admin.akun.dinas.edit');
+        Route::post('/admin/akun/dinas/{id}/update', [App\Http\Controllers\DinasController::class, 'update'])->name('admin.akun.dinas.update');
+        // Edit Akun Pusat
+        Route::get('/admin/akun/pusat/{id}/edit', [App\Http\Controllers\PusatController::class, 'edit'])->name('admin.akun.pusat.edit');
+        Route::post('/admin/akun/pusat/{id}/update', [App\Http\Controllers\PusatController::class, 'update'])->name('admin.akun.pusat.update');
     });
 
     // Dinas Routes
@@ -300,10 +301,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/dinas/laporan/step2/ditolak/{id}', [LaporanPengaduanController::class, 'showStep2Ditolak'])->name('dinas.laporan.step2.ditolak');
 
-        Route::get('/dinas/laporan/step3/diproses', function () {
-            return view('Dashboardstlhlogin.Dinas.AktivitasDinas.TrackingDinas.DinasStep3Diproses');
-        })->name('dinas.laporan.step3.diproses');
-
         Route::get('/dinas/laporan/step4/diproses/{id}', [LaporanPengaduanController::class, 'step4Diproses'])
             ->name('dinas.laporan.step4.diproses');
 
@@ -346,30 +343,17 @@ Route::middleware('auth')->group(function () {
 
     // Pemerintah Pusat Routes
     Route::middleware(['auth', 'role:pemerintahpusat'])->group(function () {
-        Route::get('/pemerintahpusat/dashboard', function () {
-            $dinasList = \App\Models\Dinas::all();
-            $ditolakCount = \App\Models\LaporanPengaduan::where('status', 'Ditolak')->count();
-            $selesaiCount = \App\Models\LaporanPengaduan::where('status', 'Selesai')->count();
-            $prosesCount = \App\Models\LaporanPengaduan::where('status', 'Di Proses')->count();
-            return view('Dashboardstlhlogin.pemerintahpusat.beranda-pusat', compact('dinasList', 'ditolakCount', 'selesaiCount', 'prosesCount'));
-        })->name('pemerintahpusat.dashboard');
-
+        Route::get('/pemerintahpusat/dashboard', [App\Http\Controllers\PusatController::class, 'dashboard'])->name('pemerintahpusat.dashboard');
         Route::get('/pemerintahpusat/statistikDinas', function () {
             return view('Dashboardstlhlogin.pemerintahpusat.StatistikDinas.statistikDinas');
         })->name('pemerintahpusat.statistikDinas');
-
-        Route::get('/pemerintahpusat/laporan', function () {
-            return view('Dashboardstlhlogin.pemerintahpusat.laporan-pusat');
-        })->name('pemerintahpusat.laporan');
-
+        Route::get('/pemerintahpusat/laporan', [App\Http\Controllers\PusatController::class, 'laporanPusat'])->name('pemerintahpusat.laporan');
         Route::get('/pemerintahpusat/laporan/belumdirespon', function () {
             return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumdirespon.belumdirespon');
         })->name('pemerintahpusat.laporan.belumdirespon');
-
         Route::get('/pemerintahpusat/laporan/belum-terselesaikan', function () {
             return view('Dashboardstlhlogin.pemerintahpusat.LaporanBelumterselesaikan.laporan-belumterselesaikan');
         })->name('pemerintahpusat.laporan.belum-terselesaikan');
-
         Route::get('/pemerintahpusat/notifikasi', [LaporanPengaduanController::class, 'notifikasiPusat'])->name('pemerintahpusat.notifikasi');
         Route::get('/pemerintahpusat/notifikasi/{id}/detail', [LaporanPengaduanController::class, 'detailNotifikasiPusatDitolak'])->name('pemerintahpusat.notifikasi.ditolak');
     });
@@ -397,11 +381,11 @@ Route::prefix('admin')->group(function () {
 });
 
 // Admin Protected Routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('Dashboardstlhlogin.Admin.Dashboard');
-    })->name('admin.dashboard');
-});
+// Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('Dashboardstlhlogin.Admin.Dashboard');
+//     })->name('admin.dashboard');
+// });
 
 Route::post('/notifikasi/{id}/dismiss', [LaporanPengaduanController::class, 'dismissNotif'])->name('notifikasi.dismiss');
 Route::post('/notifikasi/{id}/read', [LaporanPengaduanController::class, 'readNotif'])->name('notifikasi.read');

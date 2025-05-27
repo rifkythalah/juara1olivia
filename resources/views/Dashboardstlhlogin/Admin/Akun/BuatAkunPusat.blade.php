@@ -82,6 +82,13 @@
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <!-- Foto Profil -->
+                        <div>
+                            <label for="foto_profil" class="block text-hitam font-medium mb-2">Foto Profil</label>
+                            <input type="file" id="foto_profil" name="foto_profil" accept="image/*"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                        </div>
                     </div>
 
                     <!-- Kolom Kanan -->

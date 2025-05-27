@@ -63,6 +63,13 @@
                             <input type="hidden" name="grade" value="A">
                             <input type="hidden" name="point" value="0">
                         </div>
+
+                        <!-- Foto Profil -->
+                        <div class="space-y-2">
+                            <label for="foto_profil" class="block text-hitam font-medium">Foto Profil</label>
+                            <input type="file" id="foto_profil" name="foto_profil" accept="image/*"
+                                class="w-full px-4 py-3 rounded-lg bg-white border-none focus:ring-2 focus:ring-hitam">
+                        </div>
                     </div>
                     <!-- Kolom Kanan: Informasi Wilayah + Nomor Telepon -->
                     <div class="space-y-6">

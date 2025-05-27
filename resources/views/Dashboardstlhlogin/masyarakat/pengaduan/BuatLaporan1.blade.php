@@ -575,8 +575,8 @@ function startGeoTracking() {
         if(!isMobile && isLocalhost) {
             console.log("Simulating location for desktop localhost");
             currentLocation = {
-                latitude: -7.951190712166981, 
-                longitude: 112.61351028948994,
+                latitude:  -7.967456912501118,
+                longitude:  112.61085383341906,
                 accuracy: 5
             };
             updateGeoDisplay(); // Panggil update setelah set lokasi

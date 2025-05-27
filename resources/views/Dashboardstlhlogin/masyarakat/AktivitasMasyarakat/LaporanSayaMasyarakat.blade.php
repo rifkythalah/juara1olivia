@@ -162,9 +162,8 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         @php
             $completedReports = $userReports->where('status', 'Selesai');
-            $ditolakReports = $userReports->where('status', 'Ditolak');
         @endphp
-        @if($completedReports->isEmpty() && $ditolakReports->isEmpty())
+        @if($completedReports->isEmpty())
             {{-- Tampilan Kosong untuk Laporan Selesai --}}
             <div class="flex flex-col items-center justify-center min-h-[60vh] py-12 sm:py-16 px-4 relative overflow-hidden">
                 <!-- Decorative elements -->
@@ -213,41 +212,6 @@
                         </div>
                         {{-- Link Detail Laporan --}}
                         <a href="{{ $detailUrl }}" class="block">
-                            {{-- Foto Laporan --}}
-                            <div class="relative overflow-hidden">
-                                <img src="{{ asset('storage/' . $laporan->foto_video) }}" alt="Foto Laporan" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
-                            </div>
-                            {{-- Informasi Laporan --}}
-                            <div class="p-5">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2">{{ $laporan->deskripsi }}</h3>
-                                    <span class="text-sm text-gray-500">{{ $laporan->created_at->format('Y-m-d H:i:s') }}</span>
-                                </div>
-                                <div class="flex items-center text-gray-600 text-sm mb-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <a href="/masyarakat/dashboard?focus={{ $laporan->id }}" title="Lihat di Peta" class="flex items-center text-gray-600 hover:text-green-600 transition-colors">
-                                        <span class="truncate">{{ $laporan->lokasi }}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-                @foreach($ditolakReports as $laporan)
-                    <div class="card group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4" style="border-color: #E53935;">
-                        {{-- Badge Status --}}
-                        <div class="absolute top-4 right-4 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-sm" style="background: #E53935;">
-                            Tidak Terselesaikan
-                        </div>
-                        {{-- Link Detail Laporan --}}
-                        <a href="{{ route('masyarakat.laporan.ditolak', $laporan->id) }}" class="block">
                             {{-- Foto Laporan --}}
                             <div class="relative overflow-hidden">
                                 <img src="{{ asset('storage/' . $laporan->foto_video) }}" alt="Foto Laporan" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">

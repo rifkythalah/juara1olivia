@@ -102,7 +102,7 @@
                         <div class="relative">
                             <div class="profile-button flex items-center focus:outline-none cursor-pointer" onclick="toggleDropdown()">
                                 <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
-                                    <img src="{{ asset('img/logo/pusat.png') }}" alt="Profil Lapor.Pal" class="w-full h-full object-cover" />
+                                   <img src="{{ isset($pusat) && $pusat->foto_profil ? asset('storage/' . $pusat->foto_profil) : asset('img/logo/pusat.png') }}" alt="Profil Pusat" class="w-full h-full object-cover" />
                                 </div>
                             </div>
                             <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">

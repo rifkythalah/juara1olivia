@@ -49,7 +49,7 @@
             <!-- Detail Section -->
             <div class="lg:col-span-5">
                 <div class="bg-white rounded-xl shadow-xl p-8 h-full">
-                  
+
 
                      <!-- Problem Section -->
                      <div class="mb-8 pb-6 border-b border-gray-200">
@@ -125,7 +125,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Status 2 - Next -->
                                 <div class="relative flex items-start group">
                                     <div class="absolute left-0 flex items-center justify-center transform -translate-x-1/2 -translate-y-3">

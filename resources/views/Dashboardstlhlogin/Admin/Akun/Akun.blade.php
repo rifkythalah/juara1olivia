@@ -92,19 +92,19 @@
                                     Admin
                                 </span>
                             @elseif($user->role === 'dinas')
-                                <span class="px-4 py-1.5 text-sm font-medium text-green-700 bg-green-100 rounded-full inline-flex items-center">
-                                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                                <a href="{{ route('admin.akun.dinas.edit', $user->id) }}" class="inline-block align-middle mr-1" title="Edit Akun Dinas">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 hover:text-kuning inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m2-2l-6 6m2-2l6-6" />
                                     </svg>
-                                    Dinas
-                                </span>
+                                </a>
+                                <span class="px-4 py-1.5 text-sm font-medium text-green-600 bg-green-100 rounded-full">Dinas</span>
                             @elseif($user->role === 'pemerintahpusat')
-                                <span class="px-4 py-1.5 text-sm font-medium text-blue-700 bg-blue-100 rounded-full inline-flex items-center">
-                                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                <a href="{{ route('admin.akun.pusat.edit', $user->id) }}" class="inline-block align-middle mr-1" title="Edit Akun Pusat">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500 hover:text-kuning inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m2-2l-6 6m2-2l6-6" />
                                     </svg>
-                                    Pemerintah Pusat
-                                </span>
+                                </a>
+                                <span class="px-4 py-1.5 text-sm font-medium text-blue-600 bg-blue-100 rounded-full">Pemerintah Pusat</span>
                             @else
                                 <span class="px-4 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-full inline-flex items-center">
                                     <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
