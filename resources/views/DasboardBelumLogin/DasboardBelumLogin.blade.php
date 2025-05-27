@@ -42,7 +42,7 @@
         <div class="flex-1 pl-0 md:pl-8">
             <h2 class="px-4 text-[28px] md:text-[36px] font-bold mb-4 bg-gradient-to-r from-white to-kuning rounded-full text-center md:text-left">Tentang Kami</h2>
             <p class="text-[18px] md:text-[20px] font-normal mb-4">
-                <span class="text-[20px] font-bold">Lapor.Pal</span> adalah platform pengaduan masyarakat yang berfokus pada laporan jalan rusak. Kami hadir untuk memastikan setiap laporan Anda didengar dan ditindaklanjuti oleh pemerintah daerah. Dengan sistem yang transparan dan berbasis teknologi, Lapor.Pal memudahkan masyarakat dalam melaporkan kondisi jalan yang perlu diperbaiki serta memantau perkembangan perbaikannya secara real-time.
+                <span class="text-[20px] font-bold">Lapor.Pal</span> adalah platform pengaduan masyarakat yang berfokus pada laporan jalan rusak. Kami hadir untuk memastikan setiap laporan Anda didengar dan ditindaklanjuti oleh Dinas. Dengan sistem yang transparan dan berbasis teknologi, Lapor.Pal memudahkan masyarakat dalam melaporkan kondisi jalan yang perlu diperbaiki serta memantau perkembangan perbaikannya secara real-time.
             </p>
             <p class="text-[20px] md:text-[24px] font-bold mb-4 text-center md:text-left">
                 Bersama, kita bisa menciptakan infrastruktur yang lebih aman dan nyaman untuk semua!
@@ -300,7 +300,6 @@
                 </div>
             </div>
         </div>
-        <div class="swiper-pagination mt-8"></div>
     </div>
 </section>
 

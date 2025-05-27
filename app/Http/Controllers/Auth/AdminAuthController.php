@@ -49,9 +49,7 @@ class AdminAuthController extends Controller
             'email' => $request->email
         ]);
 
-        Auth::login($user);
-
-        return redirect()->route('admin.dashboard')->with('success', 'Admin account created successfully');
+        return redirect()->route('login')->with('success', 'Registrasi admin berhasil! Silakan login.');
     }
 
     public function login(Request $request)

@@ -97,12 +97,7 @@ class DinasController extends Controller
             // Get laporan utama
             $laporanUtama = LaporanPengaduan::whereNull('related_pengaduan_id')->where('dinas_id', $dinas->id)->get();
 
-            return response()->json([
-                'message' => 'Akun dinas berhasil dibuat',
-                'user' => $user,
-                'dinas' => $dinas,
-                'laporanUtama' => $laporanUtama
-            ], 201);
+            return redirect()->route('admin.akun')->with('success', 'Akun dinas berhasil dibuat!');
 
         } catch (\Exception $e) {
             Log::error('Error creating dinas account:', [
