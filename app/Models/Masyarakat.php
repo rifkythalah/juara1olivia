@@ -16,7 +16,12 @@ class Masyarakat extends Model
         'role',
         'masyarakat_id',
         'foto_profil',
-        'poin'
+        'poin',
+        'last_report_at'
+    ];
+
+    protected $casts = [
+        'last_report_at' => 'datetime',
     ];
 
     public function user()
