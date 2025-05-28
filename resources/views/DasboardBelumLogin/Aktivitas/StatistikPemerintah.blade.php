@@ -3,17 +3,12 @@
 
 @section('Laporan')
 
-<section class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-8 py-8">
-        <!-- Header Section dengan efek gradien -->
-        <div class="bg-kuning rounded-lg p-6 shadow-lg mb-8">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">Beranda</h2>
-            <p class="text-white/80">Pantau Statistik Penyelesain Dinas</p>
-        </div>
+<section class="min-h-screen -mt-8">
+    <div class="container mx-auto px-4 sm:px-8 py-4">
 
         <!-- Main Content Section -->
-        <div class="bg-white rounded-xl shadow-xl p-6 sm:p-8">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+        <div class="bg-white rounded-xl shadow-xl p-4 sm:p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-3">
                     <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />

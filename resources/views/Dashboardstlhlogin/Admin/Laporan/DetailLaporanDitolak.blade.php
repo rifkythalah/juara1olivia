@@ -1,16 +1,18 @@
 @extends('Dashboardstlhlogin.Admin.Template.Template')
 
 @section('content')
-<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-12">
+<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-4">
     <div class="container mx-auto px-8">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Detail Laporan Pengaduan</h2>
-        <a href="/admin/laporan" class="text-hitam hover:text-kuning transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-        </a>
+            <div class="flex items-center gap-3">
+                <a href="/admin/laporan" class="p-2 hover:bg-gray-100 rounded-lg transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Detail Laporan Pengaduan</h2>
+            </div>
     </div>
     <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
 
@@ -70,7 +72,7 @@
                         <span>{{ $komentar->count() }}</span>
                     </span>
                 </div>
-<div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+<div class="bg-white rounded-xl shadow-lg p-6 border border-putih">
     <div class="flex items-center mb-4">
         <div class="h-8 w-1 bg-yellow-400 rounded-full mr-3"></div>
         <h2 class="text-xl font-semibold text-gray-800">Alasan Penolakan</h2>
@@ -79,7 +81,7 @@
     <p class="text-gray-400 pl-4 text-xs">Ditolak pada: {{ \Carbon\Carbon::parse($waktu_tolak)->format('d M Y • H:i') }} WIB</p>
 </div>
                 <!-- Comment Section -->
-                <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 my-8 mb-8 border border-gray-400">
+                <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 my-8 mb-8 border border-putih">
                     <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
                         @forelse($komentar as $k)
                             <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
@@ -221,7 +223,7 @@
                                             </svg>
                                         </div>
                                     </div>
-                                    <div class="pl-8">
+                                    <div class="pl-8 w-full">
                                         <div class="bg-red-50 p-4 rounded-xl border border-red-100 shadow-sm">
                                             <div class="flex items-center">
                                                 <span class="flex items-center justify-center h-8 w-8 rounded-full bg-red-100 mr-3">

@@ -3,17 +3,9 @@
 
 @section('content')
 
-<!-- Panduan -->
-<section class="container mx-auto py-4 px-4">
-    <div class="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Panduan Pelaporan</h2>
-    </div>
-    <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
-</section>
-
-<section class="container mx-auto py-8 md:py-16 px-4 sm:px-6 lg:px-8">
+<section class="container mx-auto py-8 md:py-8 px-4 sm:px-6 lg:px-8">
     <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8 md:mb-12">Alur Pengaduan</h2>
-
+    <div class="w-full h-1 bg-kuning mb-4 sm:mb-6"></div>
     <div class="relative space-y-8 md:space-y-16">
         <!-- Vertical line with progress animation -->
         <div class="absolute left-1/2 h-full w-1 bg-gray-200 hidden md:block -translate-x-1/2 overflow-hidden">

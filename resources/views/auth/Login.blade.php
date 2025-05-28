@@ -77,7 +77,7 @@
 
                                 <!-- Lupa Password Link -->
                                 <div class="md:col-span-2 flex justify-end">
-                                    <a href="{{ route('password.request') }}" class="text-merah hover:text-opacity-80 text-sm font-medium transition-colors">Lupa Password?</a>
+                                    <a href="{{ route('password.request') }}" class="text-merah hover:text-white hover:text-opacity-80 text-sm font-medium transition-colors">Lupa Password?</a>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                         <div class="text-center mt-6">
                             <p class="text-hitam text-sm">
                                 Belum punya akun?
-                                <a href="{{ route('register') }}" class="text-biru font-semibold hover:text-opacity-80 transition-colors">Daftar sekarang</a>
+                                <a href="{{ route('register') }}" class="text-biru hover:text-white font-semibold hover:text-opacity-80 transition-colors">Daftar sekarang</a>
                             </p>
                         </div>
                     </form>

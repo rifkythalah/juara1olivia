@@ -1,16 +1,18 @@
 @extends('Dashboardstlhlogin.Admin.Template.Template')
 
 @section('content')
-<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-12">
+<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-4">
     <div class="container mx-auto px-8">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Laporan Selesai</h2>
-        <a href="/admin/laporan" class="text-hitam hover:text-kuning transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-        </a>
+            <div class="flex items-center gap-3">
+                <a href="/admin/laporan" class="p-2 hover:bg-gray-100 rounded-lg transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Detail Laporan Pengaduan</h2>
+            </div>
     </div>
     <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
 
@@ -84,11 +86,10 @@
          <p class="text-center text-gray-800 mb-2">{{ $ulasan->ulasan }}</p>
      </div>
  @else
-     <p class="text-center text-gray-500">Belum ada ulasan untuk laporan ini.</p>
  @endif
 
      <!-- Comment Section -->
-     <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 border border-gray-400">
+     <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 bg-white">
         <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
             @forelse($komentar as $k)
                 <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">

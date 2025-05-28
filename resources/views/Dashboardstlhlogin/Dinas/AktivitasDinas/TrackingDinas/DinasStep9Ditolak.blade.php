@@ -3,16 +3,18 @@
 
 @section('content')
 
-<section class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-12">
+<section class="min-h-screen py-4">
     <div class="container mx-auto px-8">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Laporan Tidak Valid</h2>
-        <a href="/dinas/laporan/masyarakat" class="text-hitam hover:text-kuning transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-        </a>
+            <div class="flex items-center gap-3">
+                <a href="/dinas/laporan/masyarakat" class="p-2 hover:bg-gray-100 rounded-lg transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Laporan Tidak Valid</h2>
+            </div>
     </div>
     <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
 
@@ -82,7 +84,7 @@
         <p class="text-gray-400 pl-4 text-xs">Ditolak pada: {{ \Carbon\Carbon::parse($waktu_tolak)->format('d M Y • H:i') }} WIB</p>
     </div>
                 <!-- Comment Section -->
-     <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 mt-8 border border-gray-400">
+     <div class="max-w-4xl mx-auto rounded-3xl shadow-md p-6 mb-8 mt-8 bg-white">
         <div class="space-y-4 h-64 overflow-y-auto mb-4 pr-2">
             @forelse($komentar as $k)
                 <div class="flex items-start {{ $k->user_id == auth()->user()->id ? 'justify-end' : '' }} space-x-3">
@@ -223,7 +225,7 @@
                                             </svg>
                                         </div>
                                     </div>
-                                    <div class="pl-8">
+                                    <div class="pl-8 w-full">
                                         <div class="bg-red-50 p-4 rounded-xl border border-red-100 shadow-sm">
                                             <div class="flex items-center">
                                                 <span class="flex items-center justify-center h-8 w-8 rounded-full bg-red-100 mr-3">
@@ -242,7 +244,7 @@
 
                         </div>
                         <div class="mt-10 flex justify-center">
-                            <button onclick="window.location.href='{{ route('dinas.laporan.step4.diproses', $laporan->id) }}'" type="button" class="flex-1 px-3 py-3 w-1/2 bg-merah text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-600 transition duration-300 flex items-center justify-center shadow-md">
+                            <button onclick="window.location.href='{{ route('dinas.laporan.step4.diproses', $laporan->id) }}'" type="button" class="flex-1 px-3 py-3 w-1/2 bg-merah text-white font-semibold rounded-lg hover:bg-abuabu transition duration-300 flex items-center justify-center shadow-md">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                 </svg>

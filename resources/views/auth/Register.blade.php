@@ -9,7 +9,7 @@
                 <h1 class="text-3xl font-bold text-center mb-8 text-hitam">Daftar</h1>
 
                 <!-- Disclaimer Box -->
-                <div class="bg-white/80 rounded-lg p-4 mb-8 text-sm text-hitam">
+                <div class="bg-white rounded-lg p-4 mb-8 text-sm text-hitam">
                 Mengapa kami meminta data ini? Layanan Lapor.pal mengumpulkan data pribadi pengguna sebagai jaminan keabsahan dari aduan atau aspirasi yang disampaikan, pengenal identitas, memverifikasi akun dan mengirim notifikasi laporan, menilai tingkat partisipasi publik, pengolahan dan analisis data, penyusunan perencanaan dan pengambilan kebijakan, monitoring dan evaluasi, dan mendorong terciptanya kebijakan yang inklusif.
                 </div>
 
@@ -121,17 +121,17 @@
 
                                 <!-- Password Hint -->
                                 <div class="md:col-span-2">
-                                    <p class="text-sm text-gray-600">Minimal 8 karakter dan harus berisi kombinasi huruf kapital, huruf kecil, angka dan karakter khusus (@$!%*#?&)</p>
+                                    <p class="text-sm text-merah">*Minimal 8 karakter dan harus berisi kombinasi huruf kapital, huruf kecil, angka dan karakter khusus (@$!%*#?&)</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Terms and Conditions Checkbox -->
                         <div class="flex items-center space-x-2 mb-8">
-                            <input type="checkbox" id="terms" name="terms" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <input type="checkbox" id="terms" name="terms" required class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 peer">
                             <label for="terms" class="text-sm text-hitam">
                                 Saya telah membaca dan menyetujui
-                                <a href="#" class="text-biru hover:text-opacity-80">Syarat dan Ketentuan Layanan</a>
+                                <a href="#" class="text-biru hover:text-white hover:text-opacity-80">Syarat dan Ketentuan Layanan</a>
                             </label>
                         </div>
 
@@ -146,7 +146,7 @@
                         <div class="text-center mt-6">
                             <p class="text-hitam text-sm">
                                 Sudah punya akun?
-                                <a href="{{ route('login') }}" class="text-biru font-semibold hover:text-opacity-80 transition-colors">Masuk di sini</a>
+                                <a href="{{ route('login') }}" class="text-biru hover:text-white font-semibold hover:text-opacity-80 transition-colors">Masuk di sini</a>
                             </p>
                         </div>
                     </form>

@@ -3,14 +3,9 @@
 
 @section('content')
 
-<section class="bg-white min-h-screen">
+<section class="bg-white">
     <div class="container mx-auto px-4 sm:px-8 py-4">
-        <div class="flex justify-between items-center mb-4 sm:mb-6">
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">Aktivitas Laporan</h2>
-        </div>
-        <div class="w-full h-1 bg-kuning mb-4 sm:mb-6"></div>
-
-        <div class="p-4 sm:p-6 flex justify-center">
+        <div class="p-2 sm:p-2 flex justify-center">
             <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <a href="/LaporanSaya"
                    class="nav-link px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold rounded-lg transition-all duration-300
@@ -30,8 +25,7 @@
             </div>
         </div>
     </div>
-
-    <main class="flex-grow py-8 mt-4 sm:mt-8">
+    <main class="flex-grow py-1 mt-4 sm:mt-1">
         @yield('Laporan')
     </main>
 

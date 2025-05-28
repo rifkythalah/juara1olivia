@@ -71,7 +71,7 @@
 
         <!-- Background kuning dengan copyright text -->
         <div class="w-full bg-kuning text-center py-4">
-            <p class="text-hitam text-[13px]">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
+            <p class="text-hitam font-semibold text-[13px]">Copyright © 2025 Pemerintah Kota Malang. - All Rights Reserved.</p>
         </div>
     </footer>
 

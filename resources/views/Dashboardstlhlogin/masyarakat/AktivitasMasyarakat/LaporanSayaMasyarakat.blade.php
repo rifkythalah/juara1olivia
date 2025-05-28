@@ -3,10 +3,10 @@
 
 @section('Laporan')
 
-<section>
+<section class="p-0 -mt-16">
     {{-- Header Aktivitas Pelaporan Saya --}}
-    <div class="indent-30 px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-2 sm:gap-4 mb-3">
+    <div class="indent-34 px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-2 sm:gap-4 mb-8">
             <h2 class="text-lg sm:text-xl md:text-[20px] font-bold text-hitam whitespace-nowrap">
                 Aktivitas Pelaporan Saya
             </h2>

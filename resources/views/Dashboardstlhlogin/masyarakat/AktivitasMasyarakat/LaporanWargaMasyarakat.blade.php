@@ -3,9 +3,9 @@
 
 @section('Laporan')
 
-<section class="p-6">
+<section class="p-0 -mt-12">
     <!-- Search and Filter -->
-    <div class="max-w-6xl mx-auto mb-8">
+    <div class="max-w-6xl mx-auto mb-2">
         <form method="GET" action="{{ route('masyarakat.laporan.warga') }}" class="flex flex-col md:flex-row gap-4">
             <div class="relative flex-1">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari laporan..."

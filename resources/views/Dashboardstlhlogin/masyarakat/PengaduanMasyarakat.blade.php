@@ -5,11 +5,7 @@
 
 
 <section class="min-h-screen">
-    <div class="container mx-auto px-8 py-4">
-        <div class="flex justify-between items-center mb-4 sm:mb-6">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Pengaduan</h2>
-        </div>
-        <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
+    <div class="container mx-auto px-8 py-1">
         <div>
             <h2 class="text-[24px] md:text-[32px] font-bold text-hitam mt-7">
                 Mengalami Masalah Terhadap Kerusakan Jalan ?
@@ -17,14 +13,14 @@
             <h2 class="text-[24px] md:text-[32px] font-bold text-kuning mb-3">
                 Buat Laporan Baru Yuk !
             </h2>
-
+            <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
             <h2 class="text-[20px] md:text-[28px] font-bold text-hitam mt-4">
                 Baca ini dulu sebelum membuat laporan ya!
             </h2>
         </div>
         <div class="max-w-4xl mx-auto p-4 sm:p-8 bg-kuning rounded-3xl shadow-xl my-5 relative overflow-hidden">
             <div class="relative z-20 space-y-6 sm:space-y-8">
-                <div class="flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 bg-putih/20 rounded-lg backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 bg-putih/40 rounded-lg backdrop-blur-sm">
                     <div class="flex-shrink-0 p-2 bg-white rounded-full shadow-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -39,7 +35,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 bg-putih/20 rounded-lg backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 bg-putih/40 rounded-lg backdrop-blur-sm">
                     <div class="flex-shrink-0 p-2 bg-white rounded-full shadow-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -55,7 +51,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 bg-putih/20 rounded-lg backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 bg-putih/40 rounded-lg backdrop-blur-sm">
                     <div class="flex-shrink-0 p-2 bg-white rounded-full shadow-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

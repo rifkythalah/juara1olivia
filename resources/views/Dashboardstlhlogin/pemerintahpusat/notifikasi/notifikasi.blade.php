@@ -3,13 +3,8 @@
 
 @section('content')
 <div class="container mx-auto px-4">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-hitam">Pemberitahuan</h1>
-        <a href="/dashboard" class="text-hitam hover:text-kuning transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-        </a>
+    <div class="flex justify-center items-center mb-6 mt-4">
+        <h1 class="text-3xl font-bold text-hitam">Pemberitahuan</h1>
     </div>
 
     <div class="space-y-4">

@@ -53,12 +53,14 @@
     <div class="container mx-auto px-8 py-4">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-4 sm:mb-6">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Pengaduan</h2>
-            <a href="/masyarakat/pengaduan" class="text-hitam hover:text-kuning transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="/masyarakat/pengaduan" class="p-2 hover:bg-gray-100 rounded-lg transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800">Pengaduan</h2>
+            </div>
         </div>
         <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
 
@@ -105,11 +107,71 @@
             </p>
         </div>
 
+        {{-- Camera Interface dan Report Form dipindahkan ke sini --}}
+    <div class="container mx-auto px-8 py-1"> {{-- Buka container baru atau sesuaikan --}}
+
+        <!-- Camera Interface -->
+        <div id="cameraSection" class="hidden max-w-lg mx-auto mt-8"> {{-- Tambah margin top --}}
+            <div class="bg-white rounded-xl shadow-lg p-4">
+                <div class="relative">
+                    <video id="camera" class="w-full h-74 object-cover rounded-lg"></video>
+                    <div class="geo-status" id="geoStatus">
+                        <span class="mr-2">🌍</span>Mencari GPS...
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-center gap-4">
+                    <button onclick="capturePhoto()" class="bg-kuning text-hitam px-6 py-2 rounded-full flex items-center gap-2 hover:bg-yellow-600 transition-colors">
+                        <img src="{{ asset('img/logo/kamera.png') }}" alt="Camera Icon" class="w-5 h-5">
+                        Ambil Foto
+                    </button>
+                    <button onclick="window.history.back()" class="bg-merah text-hitam px-6 py-2 rounded-full flex items-center gap-2 hover:bg-red-700 transition-colors">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Form -->
+        <div id="reportForm" class="hidden max-w-lg mx-auto mt-8"> {{-- Tambah margin top --}}
+            <div class="bg-white rounded-xl shadow-lg p-4">
+                <h2 class="text-xl font-bold mb-4">Form Laporan</h2>
+
+                <div class="relative mb-4">
+                    <img id="capturedImage" class="w-full h-64 object-cover rounded-lg border-2 border-dashed">
+                    <div class="address-overlay">
+                        <div id="fullAddress"></div>
+                        <div class="mt-1" id="geoDetails"></div>
+                    </div>
+                </div>
+
+
+                <div class="flex justify-between">
+                    <button onclick="retakePhoto()" class="bg-gray-500 hover:bg-kuning text-white px-4 py-2 rounded-full">
+                        Ulangi Foto
+                    </button>
+                    <button onclick="submitReport()" class="bg-kuning hover:bg-yellow-700 text-white px-6 py-2 rounded-full">
+                        Simpan & Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Initial Button (Hidden by default, shown if camera fails or is closed) -->
+        <div id="initialScreen" class="text-center mt-12 hidden">
+            <button onclick="startApp()"
+                class="bg-blue-500 text-white px-8 py-3 rounded-full text-lg hover:bg-blue-600 transition-colors">
+                Mulai Pelaporan
+            </button>
+        </div>
+
+    </div> {{-- Penutup container baru --}}
+
         {{-- Bagian Laporan Aktif Milikmu --}}
         <div class="container mx-auto px-6 mt-10">
             <!-- Header -->
             <div class="indent-30 px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-2 sm:gap-4 mb-3">
+                <div class="flex items-center gap-2 sm:gap-4 mb-10">
                     <h2 class="text-lg sm:text-xl md:text-[20px] font-bold text-hitam whitespace-nowrap">
                         Laporan Aktif Milikmu
                     </h2>
@@ -290,70 +352,15 @@
             <p class="text-sm opacity-75 mt-2" id="loading-detail"></p>
         </div>
     </div>
-
-    {{-- Camera Interface dan Report Form dipindahkan ke sini --}}
-    <div class="container mx-auto px-8 py-4"> {{-- Buka container baru atau sesuaikan --}}
-
-        <!-- Camera Interface -->
-        <div id="cameraSection" class="hidden max-w-lg mx-auto mt-8"> {{-- Tambah margin top --}}
-            <div class="bg-white rounded-xl shadow-lg p-4">
-                <div class="relative">
-                    <video id="camera" class="w-full h-64 object-cover rounded-lg"></video>
-                    <div class="geo-status" id="geoStatus">
-                        <span class="mr-2">🌍</span>Mencari GPS...
-                    </div>
-                </div>
-
-                <div class="mt-4 flex justify-center gap-4">
-                    <button onclick="capturePhoto()" class="bg-blue-500 text-white px-6 py-2 rounded-full flex items-center">
-                        📸 Ambil Foto
-                    </button>
-                    <button onclick="closeCamera()" class="bg-gray-500 text-white px-6 py-2 rounded-full">
-                        Batal
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Report Form -->
-        <div id="reportForm" class="hidden max-w-lg mx-auto mt-8"> {{-- Tambah margin top --}}
-            <div class="bg-white rounded-xl shadow-lg p-4">
-                <h2 class="text-xl font-bold mb-4">Form Laporan</h2>
-
-                <div class="relative mb-4">
-                    <img id="capturedImage" class="w-full h-64 object-cover rounded-lg border-2 border-dashed">
-                    <div class="address-overlay">
-                        <div id="fullAddress"></div>
-                        <div class="mt-1" id="geoDetails"></div>
-                    </div>
-                </div>
-
-
-                <div class="flex justify-between">
-                    <button onclick="retakePhoto()" class="bg-gray-500 text-white px-4 py-2 rounded-full">
-                        Ulangi Foto
-                    </button>
-                    <button onclick="submitReport()" class="bg-green-500 text-white px-6 py-2 rounded-full">
-                        Simpan & Lanjutkan
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Initial Button (Hidden by default, shown if camera fails or is closed) -->
-        <div id="initialScreen" class="text-center mt-12 hidden">
-            <button onclick="startApp()"
-                class="bg-blue-500 text-white px-8 py-3 rounded-full text-lg hover:bg-blue-600 transition-colors">
-                Mulai Pelaporan
-            </button>
-        </div>
-
-    </div> {{-- Penutup container baru --}}
-
 </section>
 
+<<<<<<< HEAD
 <div id="cooldownModal" class="fixed inset-0 items-center justify-center z-50  hidden">
     <div class="bg-yellow-400 rounded-2xl px-8 py-8 max-w-lg w-full text-center shadow-lg relative">
+=======
+<div id="cooldownModal" class="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50  hidden">
+    <div class="bg-white rounded-2xl px-8 py-8 max-w-lg w-full text-center shadow-lg relative">
+>>>>>>> d587b75184e24b64267f5f2baff19db85bf573bf
         <div class="text-sm sm:text-2xl font-bold text-black mb-4">
             Mohon maaf tidak bisa mengirim laporan baru.<br>
             Anda harus menunggu (2 menit):
@@ -362,7 +369,7 @@
             <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
         </div>
         <button onclick="closeCooldownModal()"
-                class="mt-4 bg-white text-yellow-500 font-bold py-2 px-8 rounded-lg hover:text-white hover:bg-kuning hover:ring-2 ring-white hover:bg-opacity-90 transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg">
+                class="mt-4 bg-kuning text-hitam font-bold py-2 px-8 rounded-lg hover:text-white hover:bg-kuning hover:ring-2 ring-white hover:bg-opacity-90 transform hover:scale-[0.98] transition-all duration-200 text-base shadow-lg">
             Oke
         </button>
     </div>

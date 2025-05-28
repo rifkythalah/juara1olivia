@@ -37,7 +37,7 @@ class LoginController extends Controller
                 case 'admin':
                     return redirect()->intended('/admin/dashboard');
                 case 'dinas':
-                    return redirect()->intended('/dinas/dashboard');
+                    return redirect()->intended('/dinas/laporan/masyarakat');
                 case 'pemerintahpusat':
                     return redirect()->intended('/pemerintahpusat/dashboard');
                 case 'masyarakat':

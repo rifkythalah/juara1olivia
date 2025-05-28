@@ -100,7 +100,7 @@
 
 <style>
 .hamburger-line {
-    @apply w-[30px] h-[2px] my-2 block bg-hitam;
+    @apply w-8 h-1.5 my-1.5 block bg-hitam rounded transition-all duration-300;
 }
 
 #hamburger.active span:nth-child(1) {

@@ -34,14 +34,17 @@
 
 /* Warna teks saat scroll */
 .navbar-fixed #nav-menu a {
-    @apply text-white hover:text-white/90;
+    @apply text-hitam hover:text-white/90;
 }
 
 .navbar-fixed #nav-menu a.active {
-    @apply text-white;
+    @apply text-hitam;
 }
 
-
+#nav-menu.open {
+  display: block;
+  max-height: 100vh;
+}
 
 
 
@@ -94,4 +97,29 @@
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+/* Hamburger default hitam */
+.hamburger-line {
+    background-color: #000;
+    transition: background 0.3s;
+}
+/* Saat discroll, tetap hitam */
+.header.scrolled .hamburger-line {
+    background-color: #000;
+}
+.hamburger-line-yellow {
+    background-color: #000;
+    transition: background 0.3s;
+}
+.hamburger-line-white {
+    background-color: #000;
+    transition: background 0.3s;
+}
+@media (max-width: 1023px) {
+    #nav-menu {
+        background: #fff !important;
+        opacity: 1 !important;
+        z-index: 9999 !important;
+    }
 }

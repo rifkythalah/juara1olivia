@@ -26,6 +26,34 @@ class LaporanPengaduanController extends Controller
         \Log::info('Request all', $request->all());
         \Log::info('Request files', $request->allFiles());
 
+        $masyarakat = Auth::user()->masyarakat;
+        $masyarakatId = $masyarakat->id ?? null;
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        // Check for exact duplicate report by the same user at the same location within the last 5 seconds
+        $exactDuplicate = \App\Models\LaporanPengaduan::where('masyarakat_id', $masyarakatId)
+            ->where('latitude', $latitude)
+            ->where('longitude', $longitude)
+            ->where('created_at', '>=', now()->subSeconds(5))
+            ->exists();
+
+        if ($exactDuplicate) {
+            return; // Stop execution silently
+        }
+
+        // Check for recent duplicate reports within 10 meters and last 15 seconds for the same user
+        $recentNearbyReport = \App\Models\LaporanPengaduan::selectRaw('*, (6371000 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
+            ->having('distance', '<=', 10) // Check within 10 meters radius
+            ->where('masyarakat_id', $masyarakatId)
+            ->whereIn('status', ['Menunggu', 'Di Proses']) // Consider pending reports
+            ->where('created_at', '>=', now()->subSeconds(15)) // Check within last 15 seconds
+            ->exists();
+
+        if ($recentNearbyReport) {
+            return; // Stop execution silently
+        }
+
         $request->validate([
             'foto' => 'required|image|mimes:jpeg,png,jpg|max:5120', // max 5MB
             'latitude' => 'required|numeric',
@@ -39,27 +67,6 @@ class LaporanPengaduanController extends Controller
         $masyarakatId = $masyarakat->id ?? null;
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-
-        // 1. CEK COOLDOWN 1 HARI
-        if ($masyarakat->last_report_at && now()->diffInMinutes($masyarakat->last_report_at) < 2) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anda hanya bisa mengirim 1 laporan per 2 menit. Silakan coba lagi nanti.'
-            ]);
-        }
-
-        // 2. CEK JUMLAH LAPORAN DALAM RADIUS 5M (status Menunggu/Di Proses)
-        $laporanDekat = \App\Models\LaporanPengaduan::selectRaw('*, (6371000 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
-            ->having('distance', '<=', 5)
-            ->whereIn('status', ['Menunggu', 'Di Proses'])
-            ->count();
-
-        if ($laporanDekat >= 3) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Maaf, sudah ada 3 laporan pada lokasi ini dalam radius 5 meter.'
-            ]);
-        }
 
         // 3. CARI LAPORAN UTAMA (pertama) di radius 5 meter
         $laporanUtama = \App\Models\LaporanPengaduan::selectRaw('*, (6371000 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])

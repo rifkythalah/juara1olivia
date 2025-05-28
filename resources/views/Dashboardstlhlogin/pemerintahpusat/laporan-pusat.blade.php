@@ -2,17 +2,14 @@
 @section('title', 'pusat')
 
 @section('content')
-
 <section class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 sm:px-6 py-4">
         <!-- Header Section -->
         <div class="flex justify-between items-center mb-2">
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 pl-8">
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 truncate">Laporan Dinas</h2>
             </div>
         </div>
-        <div class="w-full h-1 bg-yellow-400 mb-4 sm:mb-6"></div>
-    </div>
 
     <!-- Search and Filter Section -->
     <div class="container mx-auto px-4 sm:px-6 py-4">
@@ -20,7 +17,7 @@
             <!-- Search Bar -->
             <div class="flex-1 relative">
                 <input type="text" id="searchInput" name="q" value="{{ request('q') }}" placeholder="Cari Jalan laporan..."
-                    class="w-1/2 pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm sm:text-base">
+                    class="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm sm:text-base">
                 <svg class="absolute left-3 top-2.5 sm:top-3 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -42,24 +39,25 @@
         <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-yellow-400">
-                        <tr>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black">No</th>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black">Foto</th>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black hidden sm:table-cell">Keterangan</th>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black hidden md:table-cell">Alamat</th>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black">Tanggal</th>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black">Status</th>
-                            <th class="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-medium text-black">Detail</th>
+                    <thead>
+                        <tr class="bg-kuning">
+                            <th class="px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam">No</th>
+                            <th class="px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam">Foto</th>
+                            <th class="px-3 sm:px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam hidden sm:table-cell">Keterangan</th>
+                            <th class="px-3 sm:px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam hidden md:table-cell">Alamat</th>
+                            <th class="px-3 sm:px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam">Tanggal</th>
+                            <th class="px-3 sm:px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam">Status</th>
+                            <th class="px-3 sm:px-4 py-4 text-left text-xs sm:text-sm font-semibold text-hitam">Detail</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 bg-white">
+                    <tbody class="divide-y divide-gray-100">
                         @forelse($laporans as $laporan)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-900">{{ $loop->iteration }}</td>
-                                <td class="px-3 sm:px-4 py-4">
+                            <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                                <td class="px-4 py-4 text-sm text-gray-900">{{ $loop->iteration }}</td>
+                                <td class="px-4 py-4">
                                     <img src="{{ asset('storage/' . $laporan->foto_video) }}" alt="Laporan"
-                                        class="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded shadow">
+                                        class="w-16 h-16 object-cover rounded-lg shadow-md hover:shadow-lg
+                                               transition duration-200 ease-in-out">
                                 </td>
                                 <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-900 hidden sm:table-cell">{{ $laporan->deskripsi }}</td>
                                 <td class="px-3 sm:px-4 py-4 text-xs sm:text-sm text-gray-900 hidden md:table-cell">
@@ -96,7 +94,14 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada laporan yang belum direspon.</td>
+                                <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <p class="text-gray-600 font-medium">Tidak ada laporan yang belum direspon</p>
+                                    </div>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -105,6 +110,7 @@
         </div>
     </div>
 </section>
+@endsection
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -134,4 +140,3 @@
         statusFilter.addEventListener('change', filterTable);
     });
 </script>
-@endsection
