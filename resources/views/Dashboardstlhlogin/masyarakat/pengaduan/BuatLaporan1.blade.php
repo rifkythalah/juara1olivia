@@ -352,7 +352,7 @@
 
 </section>
 
-<div id="cooldownModal" class="fixed inset-0 flex items-center justify-center z-50  hidden">
+<div id="cooldownModal" class="fixed inset-0 items-center justify-center z-50  hidden">
     <div class="bg-yellow-400 rounded-2xl px-8 py-8 max-w-lg w-full text-center shadow-lg relative">
         <div class="text-sm sm:text-2xl font-bold text-black mb-4">
             Mohon maaf tidak bisa mengirim laporan baru.<br>
